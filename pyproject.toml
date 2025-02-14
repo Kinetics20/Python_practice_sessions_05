@@ -6,7 +6,9 @@ authors = ["Piotr Lipinski <kinetics20@gmail.com>"]
 license = "Beerware"
 readme = "README.md"
 requires-python = ">=3.12"
-dependencies = []
+dependencies = [
+    "pillow>=11.1.0",
+]
 
 [dependency-groups]
 dev = [
