@@ -5,7 +5,7 @@ description = "The repository is dedicated to exercises in python programming."
 authors = ["Piotr Lipinski <kinetics20@gmail.com>"]
 license = "Beerware"
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.13"
 dependencies = [
     "pillow>=11.1.0",
 ]
