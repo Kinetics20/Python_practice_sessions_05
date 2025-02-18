@@ -6,7 +6,7 @@
 
 ## 📌 Professional Summary  
 
-Experienced, enthusiastic, reliable and highly-adaptable IT professional with 20+ years in network infrastructure maintenance and implementation of sales, accounting, and e-commerce systems across various industries.  
+Reliable and highly-adaptable IT professional with 20+ years in network infrastructure maintenance and implementation of sales, accounting, and e-commerce systems across various industries.  
 
 Strong expertise in MS Windows environments, computer networks, hardware configuration, and modernization.  
 
@@ -24,7 +24,7 @@ Strong expertise in MS Windows environments, computer networks, hardware configu
 
 ## 💼 Work History  
 
-### **IT Support Specialist - Mot-Pol (2002 - current)**  
+### **Software Engineer - Mot-Pol (2002 - current)**  
 - **IT Support & Network Administration**  
   Network management, PC upgrades and repairs, network terminal configuration, company data backup (MS Windows environment).  
 - **Business System Implementation**  
@@ -116,7 +116,7 @@ Strong expertise in MS Windows environments, computer networks, hardware configu
 ✅ Dedicated to my work with a proactive & independent approach  
 ✅ Creative problem solver – No task is impossible!  
 
-**"Better now than never." – My motto**  
+**\"Better now than never.\" – My motto**  
 
 ---
 
@@ -131,15 +131,15 @@ Sports: Running, swimming 🏃‍♂️🏊‍♂️
 ## 📚 Courses  
 
 ### **2025**  
-Currently enrolled in a **Data Science & Machine Learning** course led by Paweł Konior, focusing on Python development up to the Senior Python Developer level.  
+Currently enrolled in a **Data Science & Machine Learning** course led by [Paweł Konior](https://github.com/pawelkonior), focusing on Python development up to the Senior Python Developer level.  
 
 ### **2024 - 2025**  
-**Sekurak Academy**  
+[**Sekurak Academy**](https://sklep.securitum.pl/sekurak-academy-2025)  
 - Files through the eyes of a hacker - Gynvael Coldwind  
 - Introduction to Reverse Engineering and Assembler - Gynvael Coldwind  
 - Working with bits and bytes - Gynvael Coldwind  
 
-**TryHackMe Cyber Academy**  
+[**TryHackMe Cyber Academy**](https://tryhackme.com/)  
 - Introduction to Cyber Security  
 - Pre Security  
 
@@ -147,5 +147,5 @@ Currently enrolled in a **Data Science & Machine Learning** course led by Paweł
 
 | Year | School | Levels Covered |
 |------|--------|---------------|
-| 2020 - current | eTutor | A1, A2, B1, B2, C1, C2 & Travel English (certificates) |
-| 2019 - 2020 | Busuu | A1, A2, B1, B2 & Business English (certificates) |
+| 2020 - current | [eTutor](https://www.etutor.pl) | A1, A2, B1, B2, C1, C2 & Travel English (certificates) |
+| 2019 - 2020 | [Busuu](https://www.busuu.com) | A1, A2, B1, B2 & Business English (certificates) |
