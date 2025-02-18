@@ -6,7 +6,7 @@
 
 ## 📌 Professional Summary  
 
-Experienced IT professional with 20+ years in network infrastructure maintenance and implementation of sales, accounting, and e-commerce systems across various industries.  
+Experienced, enthusiastic, reliable and highly-adaptable IT professional with 20+ years in network infrastructure maintenance and implementation of sales, accounting, and e-commerce systems across various industries.  
 
 Strong expertise in MS Windows environments, computer networks, hardware configuration, and modernization.  
 
