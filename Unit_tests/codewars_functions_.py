@@ -1354,7 +1354,7 @@ def get_ascii(str):
     return ord(str)
 
 
-from datetime import datetime, timedelta
+from sample_datetime import datetime, timedelta
 
 
 def period_is_late(last, today, cycle_length):
@@ -2387,11 +2387,11 @@ def playerRankUp(pts):
     return "Well done! You have advanced to the qualifying stage. Win 2 out of your next 3 games to rank up." if pts >= 100 else False
 
 
-from datetime import datetime
+from sample_datetime import datetime
 
 
 def is_today(date):
-    return datetime.today().date() == date.date()
+    return sample_datetime.today().date() == date.date()
 
 
 def kata_13_december(lst):
@@ -2736,13 +2736,13 @@ def is_it_letter(s):
     return s.isalpha()
 
 
-import datetime
+import sample_datetime
 
 
 def week_start_date(dt):
     days_difference = dt.weekday()
 
-    start_of_week = dt - datetime.timedelta(days=days_difference)
+    start_of_week = dt - sample_datetime.timedelta(days=days_difference)
 
     return start_of_week
 
@@ -2750,7 +2750,7 @@ def week_start_date(dt):
 def week_end_date(dt):
     days_difference = 6 - dt.weekday()
 
-    end_of_week = dt + datetime.timedelta(days=days_difference)
+    end_of_week = dt + sample_datetime.timedelta(days=days_difference)
 
     return end_of_week
 

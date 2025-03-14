@@ -7,6 +7,9 @@ license = "Beerware"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
+    "jupyterlab>=4.3.6",
+    "matplotlib>=3.10.1",
+    "pandas==2.2.3",
     "pillow>=11.1.0",
     "requests>=2.32.3",
 ]

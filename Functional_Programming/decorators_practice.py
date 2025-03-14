@@ -1,4 +1,4 @@
-from datetime import datetime
+from sample_datetime import datetime
 
 
 def reverse(fn):
