@@ -1,9 +1,13 @@
 import random
-W, H = 80, 30
-DECAY = 10
+import sys
+import time
+
+W, H = 60, 30
+DECAY = 28
 
 buf = bytearray(W * H)
 droplets: list = []
+
 
 def iterate():
     global droplets
@@ -17,7 +21,7 @@ def iterate():
             buf[x + y * W] = v
     while len(droplets) < int(W * 1.5):
         droplet = [
-            random.randint(0, W-1),
+            random.randint(0, W - 1),
             0,
             1 + random.random() * 1.5,
         ]
@@ -39,10 +43,11 @@ def iterate():
             droplet[1] = next_y
             new_droplets.append(droplet)
 
-
-
     droplets = new_droplets
-CHARSET = '0123456789'
+
+
+CHARSET = [chr(x) for x in range(0x30a1, 0x30fb)]
+
 
 def draw():
     o = ['\x1b[2J\x1b[1;1H']
@@ -60,5 +65,15 @@ def draw():
                 g = v * 2
                 b = 0
 
-            ch = CHARSET[(x * 15267 + y * 91263) % len(CHARSET)]
+            ch = CHARSET[(x * 15263 + y * 91263) % len(CHARSET)]
             o.append(f'\x1b[38;2;{r};{g};{b}m{ch}\x1b[m')
+        o.append('\n')
+
+    sys.stdout.write(''.join(o))
+    sys.stdout.flush()
+
+
+while True:
+    iterate()
+    draw()
+    time.sleep(0.1)
