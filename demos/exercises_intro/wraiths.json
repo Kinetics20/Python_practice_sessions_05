@@ -1,0 +1,13 @@
+{
+  "type": "wraiths",
+  "days": [
+    { "day": 0, "count": 1 },
+    { "day": 1, "count": 0 },
+    { "day": 2, "count": 0 },
+    { "day": 3, "count": 1 },
+    { "day": 4, "count": 0 },
+    { "day": 5, "count": 0 },
+    { "day": 6, "count": 2 },
+    { "day": 7, "count": 17 }
+  ]
+}

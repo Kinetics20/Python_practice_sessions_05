@@ -1,0 +1,14 @@
+{
+  "type": "ghosts",
+  "days": [
+    { "day": 0, "count": 30 },
+    { "day": 1, "count": 42 },
+    { "day": 2, "count": 18 },
+    { "day": 3, "count": 8 },
+    { "day": 4, "count": 8 },
+    { "day": 5, "count": 15 },
+    { "day": 6, "count": 17 },
+    { "day": 7, "count": 31 },
+    { "day": 8, "count": 33 }
+  ]
+}
