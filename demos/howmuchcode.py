@@ -1,9 +1,11 @@
 import os
 import time
+import json
 from pprint import pprint
 
 
-DIR_TO_SCAN = '/home/lipov/projects/Python_practice_sessions_05/demos/random-stuff'
+# DIR_TO_SCAN = '/home/lipov/projects/Python_practice_sessions_05/demos/random-stuff'
+DIR_TO_SCAN = '/home/lipov/projects'
 
 EXT_TO_LANG = {
     '.c': 'C/C++',
@@ -23,12 +25,18 @@ EXT_TO_LANG = {
     '.pl': 'Perl',
     '.php': 'PHP',
     '.sh': 'Bash',
+    '.ipynb': 'Jupyter Notebook',
 
 }
 
 def count_lines(fname):
     with open(fname, 'rb') as f:
-        return len(f.readlines())
+        counter = 0
+        for ln in f.readlines():
+            if not ln.strip():
+                continue
+            counter += 1
+        return counter
 
 
 def get_stats(stats):
@@ -77,18 +85,24 @@ def show_stats_for(label, locs):
     while i < max_loc:
         i *= 2
 
-    print(f'\x1b[1;37m{label}\x1b[m')
+    print(f'\x1b[1;37m{label}\x1b[m (scale: 1/{i})')
 
-    for loc in locs:
+    for j, loc in enumerate(locs):
+        if len(locs) ==1:
+            g = 255
+        else:
+            g = 55 + int((j / (len(locs) - 1)) * 200)
+        color = f'\x1b[38;2;0;{g};0m'
+
         bar_size = int((loc / i) * BAR_WIDTH)
         bar = '\u2593' * bar_size
-        print(f'\x1b[1;31m{loc:5}\x1b[m \x1b[1;32m{bar}\x1b[m')
+        print(f'\x1b[1;31m{loc:5}\x1b[m {color}{bar}\x1b[m')
     print()
 
 def show_stats(stats_in_time):
     print('\x1b[1;1H\x1b[2J', end='')
 
-    for lang in ['Bash', 'Python', 'HTML']:
+    for lang in ['Bash', 'Python', 'HTML', 'Jupyter Notebook', 'JavaScript']:
         locs = []
         for stats in stats_in_time:
             locs.append(stats['langs'].get(lang, 0))
@@ -103,6 +117,12 @@ def show_stats(stats_in_time):
 def main():
     stats_in_time = []
 
+    # try:
+    #     with open('stats.json') as f:
+    #         stats_in_time = json.load(f)
+    # except FileNotFoundError:
+    #     pass
+
     try:
         while True:
             stats = {
@@ -116,9 +136,12 @@ def main():
             stats_in_time.append(stats)
 
             show_stats(stats_in_time[-6:])
-            time.sleep(5)  # Seconds.
+            time.sleep(1)  # Seconds.
     except KeyboardInterrupt:
         pass
+
+    with open('stats.json', 'w') as f:
+        json.dump(stats_in_time, f)
 
 
 if __name__ == '__main__':
