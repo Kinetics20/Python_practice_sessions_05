@@ -4,7 +4,13 @@ from fastapi import FastAPI
 app = FastAPI()
 
 @app.post('/api/add-numbers')
-def add_numbers(numbers):
+def add_numbers(api_key: str, numbers: list[int]) -> dict:
+    if api_key != 'pass':
+        return {
+            'result': None,
+            'error' : True,
+            'error_msg': 'access denied'
+        }
     acc = 0
     for n in numbers:
         acc += n
