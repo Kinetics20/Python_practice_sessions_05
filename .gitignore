@@ -6,6 +6,6 @@ dist/
 wheels/
 *.egg-info
 .idea
-
 # Virtual environments
 .venv
+/demos/chat/demo.key
