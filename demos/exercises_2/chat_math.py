@@ -1,62 +1,68 @@
-import sys
 import os
 import json
-import time
 import requests
+import math
 from openai import OpenAI
 
-USER_AGENT = "ChatWithMathAPI"
-API_BASE = "http://127.0.0.1:8000"  # FastAPI kalkulator lokalnie
-
-# Wczytywanie API key z pliku demo.key podobnie jak w Twoim przykładzie
 key_path = os.path.join(os.path.dirname(__file__), "..", "chat", "demo.key")
 with open(key_path, "r") as f:
     api_key: str = f.read().strip()
 
+client = OpenAI(api_key=api_key)
+API_BASE = "http://127.0.0.1:8000"
+USER_AGENT = "ChatWithFullMathAPI"
+
 tools = [
-    {
-        "type": "function",
-        "name": "math_operation",
-        "description": "Perform basic math operations (add, subtract, multiply, divide, power).",
-        "parameters": {
-            "type": "object",
-            "properties": {
-                "operation": {"type": "string", "description": "add, subtract, multiply, divide, power"},
-                "a": {"type": "number"},
-                "b": {"type": "number"}
-            },
-            "required": ["operation", "a", "b"],
-            "additionalProperties": False
-        }
-    }
+    {"type": "function", "name": "add", "description": "Add two numbers",
+     "parameters": {"type": "object",
+                    "properties": {"a": {"type": "number"}, "b": {"type": "number"}},
+                    "required": ["a", "b"], "additionalProperties": False}},
+    {"type": "function", "name": "subtract", "description": "Subtract b from a",
+     "parameters": {"type": "object",
+                    "properties": {"a": {"type": "number"}, "b": {"type": "number"}},
+                    "required": ["a", "b"], "additionalProperties": False}},
+    {"type": "function", "name": "multiply", "description": "Multiply two numbers",
+     "parameters": {"type": "object",
+                    "properties": {"a": {"type": "number"}, "b": {"type": "number"}},
+                    "required": ["a", "b"], "additionalProperties": False}},
+    {"type": "function", "name": "divide", "description": "Divide a by b",
+     "parameters": {"type": "object",
+                    "properties": {"a": {"type": "number"}, "b": {"type": "number"}},
+                    "required": ["a", "b"], "additionalProperties": False}},
+    {"type": "function", "name": "power", "description": "Raise a to the power of b",
+     "parameters": {"type": "object",
+                    "properties": {"base": {"type": "number"}, "exponent": {"type": "number"}},
+                    "required": ["base", "exponent"], "additionalProperties": False}},
+    {"type": "function", "name": "sin", "description": "Calculate sine (radians)",
+     "parameters": {"type": "object",
+                    "properties": {"x": {"type": "number"}},
+                    "required": ["x"], "additionalProperties": False}},
+    {"type": "function", "name": "cos", "description": "Calculate cosine (radians)",
+     "parameters": {"type": "object",
+                    "properties": {"x": {"type": "number"}},
+                    "required": ["x"], "additionalProperties": False}},
 ]
 
-log: list[dict] = []
-client = OpenAI(api_key=api_key)
-
-def call_math_api(operation: str, a: float, b: float) -> str:
+def call_math_api(name: str, args: dict) -> str:
+    """Execute the local FastAPI for exact operation."""
     try:
-        resp = requests.get(
-            f"{API_BASE}/{operation}",
-            params={"a": a, "b": b},
-            headers={"User-Agent": USER_AGENT}
-        )
+        url = f"{API_BASE}/{name}"
+        resp = requests.get(url, params=args, headers={"User-Agent": USER_AGENT})
         resp.raise_for_status()
-        return str(resp.json().get("result"))
+        return str(resp.json().get("result", "no result"))
     except Exception as e:
-        return f"Error calling math API: {e}"
+        return f"Error: {e}"
 
-if __name__ == "__main__":
-    print("Chat with math API ready.")
-    skip_input = False
+def main():
+    print("Chat with full math API ready.")
+    log = []
 
     while True:
-        if not skip_input:
-            try:
-                user_input = input("? ")
-            except (EOFError, KeyboardInterrupt):
-                break
-            log.append({"role": "user", "content": user_input})
+        try:
+            user_input = input("? ")
+        except (EOFError, KeyboardInterrupt):
+            break
+        log.append({"role": "user", "content": user_input})
 
         response = client.responses.create(
             model="gpt-4.1-nano",
@@ -64,27 +70,21 @@ if __name__ == "__main__":
             tools=tools,
         )
 
+        skip_input = False
         for o in response.output:
             log.append(o)
 
             if o.type == "message":
                 print(o.content[0].text)
-                skip_input = False
-
             elif o.type == "function_call":
+                func = o.name
                 args = json.loads(o.arguments)
-                if o.name == "math_operation":
-                    skip_input = True
-                    result = call_math_api(args["operation"], args["a"], args["b"])
-                    log.append({
-                        "type": "function_call_output",
-                        "call_id": o.call_id,
-                        "output": result
-                    })
-                    print(f"🧮 Math result: {result}")
-                    continue
-                else:
-                    print(f"Unknown function: {o.name}")
-                    skip_input = False
+                result = call_math_api(func, args)
+                log.append({"type": "function_call_output", "call_id": o.call_id, "output": result})
+                print(f"🧮 {func} result: {result}")
+            skip_input = False
 
     print("End.")
+
+if __name__ == "__main__":
+    main()
