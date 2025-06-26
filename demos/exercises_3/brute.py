@@ -34,3 +34,4 @@ if hashlib.sha256(sent_password.encode()).hexdigest() == users[sent_username]:
 else:
     print('failed logging')"""
 
+# echo -n '1234567' |sha256sum
