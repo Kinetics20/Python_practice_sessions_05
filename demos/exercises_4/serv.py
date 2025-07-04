@@ -9,7 +9,28 @@ s.listen(10)
 c, addr = s.accept()
 print("CONNECTED:", addr)
 
-c.shutdown(socket.SHUT_RDWR)
+start = time.time()
+total = 0
+while True:
+    data = c.recv(1024)
+    if not data:
+        print('disconnected')
+        break
+    print(f"Received: {len(data)} bytes")
+
+    total += len(data)
+
+    now = time.time()
+    interval = now - start
+    if interval >= 1.0:
+        speed = total / interval
+        print(f'Speed: {speed / 1024} KB/s')
+
+        total = 0
+        start = now
+
+
+# c.shutdown(socket.SHUT_RDWR)
 c.close()
 
 s.close()
