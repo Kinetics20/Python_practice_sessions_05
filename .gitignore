@@ -9,3 +9,5 @@ wheels/
 # Virtual environments
 .venv
 /demos/chat/demo.key
+/demos/exercises_4/bigfile
+
