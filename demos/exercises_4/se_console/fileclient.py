@@ -59,7 +59,7 @@ with open('bigfile', 'r+b') as f:
               end='', flush=True)
 
         offset = f.tell()
-        f.seek(offset - FRAG_SZ)
+        f.seek(offset - len(fdata))
         f.write(sdata)
         print('patched!')
 
