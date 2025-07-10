@@ -1,6 +1,7 @@
 import socket
 import time
 import hashlib
+import struct
 
 FRAG_SZ = 1024 * 1024 # 1MB
 
@@ -16,6 +17,9 @@ def recvall(s, size):
         total += len(part_data)
         data.append(part_data)
 
+        if total == size:
+            return b''.join(data)
+
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 s.bind(('0.0.0.0', 1234))
@@ -27,11 +31,30 @@ print("CONNECTED:", addr)
 with open('bigfile', 'rb') as f:
     while True:
         fdata = f.read(FRAG_SZ)
+        if not fdata:
+            break
+
         h = hashlib.sha256(fdata).digest()
 
         c.sendall(h)
 
+        req = recvall(c, 2)
+        if req is None:
+            break
 
+        if req == b'OK':
+            continue
+
+        if req == b'UP':
+            c.sendall(struct.pack('<I', len(fdata)))
+            c.sendall(fdata)
+            continue
+
+        raise NotImplementedError(
+            f'Unknown request: {req}'
+        )
+
+c.shutdown(socket.SHUT_RDWR)
 c.close()
 
 s.close()

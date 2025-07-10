@@ -1,4 +1,5 @@
 import socket
+import struct
 import time
 import hashlib
 
@@ -16,22 +17,50 @@ def recvall(s, size):
         total += len(part_data)
         data.append(part_data)
 
+        if total == size:
+            return b''.join(data)
+
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-s.bind(('0.0.0.0', 1234))
-s.listen(10)
+s.connect(('192.168.0.172', 1234))
 
-c, addr = s.accept()
-print("CONNECTED:", addr)
+print("CONNECTED:")
 
-with open('bigfile', 'rb') as f:
+frag_number = -1
+with open('bigfile', 'r+b') as f:
     while True:
+        frag_number += 1
         fdata = f.read(FRAG_SZ)
-        h = hashlib.sha256(fdata).digest()
+        if not fdata:
+            break
 
-        c.sendall(h)
+        h_our = hashlib.sha256(fdata).digest()
 
+        h_serv = recvall(s, 32)
 
-c.close()
+        if h_serv is None:
+            print('Server disconnected. Done')
+            break
+
+        if h_our == h_serv:
+            print(f'Frag {frag_number} is good')
+            s.sendall(b'OK')
+            continue
+
+        print(f'Frag {frag_number} is BAD: ',
+              end='', flush=True)
+        s.sendall(b'UP')
+
+        frag_len = struct.unpack('<I', recvall(s, 4))[0]
+        print(f'{frag_len // 1024} KB...',
+              end='', flush=True)
+        sdata = recvall(s, FRAG_SZ)
+
+        print(f'{len(sdata) // 1024} KB downloaded... ',
+              end='', flush=True)
+
+        offset = f.tell()
+        f.seek(offset - FRAG_SZ)
+        f.write(sdata)
+        print('patched!')
 
 s.close()
