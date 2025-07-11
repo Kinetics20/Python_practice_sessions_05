@@ -968,6 +968,15 @@ wheels = [
 ]
 
 [[package]]
+name = "markdown"
+version = "3.8.2"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/d7/c2/4ab49206c17f75cb08d6311171f2d65798988db4360c4d1485bd0eedd67c/markdown-3.8.2.tar.gz", hash = "sha256:247b9a70dd12e27f67431ce62523e675b866d254f900c4fe75ce3dda62237c45", size = 362071 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/96/2b/34cc11786bc00d0f04d0f5fdc3a2b1ae0b6239eef72d3d345805f9ad92a1/markdown-3.8.2-py3-none-any.whl", hash = "sha256:5c83764dbd4e00bdd94d85a19b8d55ccca20fe35b2e678a1422b380324dd5f24", size = 106827 },
+]
+
+[[package]]
 name = "markdown-it-py"
 version = "3.0.0"
 source = { registry = "https://pypi.org/simple" }
@@ -1539,6 +1548,19 @@ wheels = [
 ]
 
 [[package]]
+name = "pymdown-extensions"
+version = "10.16"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "markdown" },
+    { name = "pyyaml" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/1a/0a/c06b542ac108bfc73200677309cd9188a3a01b127a63f20cadc18d873d88/pymdown_extensions-10.16.tar.gz", hash = "sha256:71dac4fca63fabeffd3eb9038b756161a33ec6e8d230853d3cecf562155ab3de", size = 853197 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/98/d4/10bb14004d3c792811e05e21b5e5dcae805aacb739bd12a0540967b99592/pymdown_extensions-10.16-py3-none-any.whl", hash = "sha256:f5dd064a4db588cb2d95229fc4ee63a1b16cc8b4d0e6145c0899ed8723da1df2", size = 266143 },
+]
+
+[[package]]
 name = "pyparsing"
 version = "3.2.3"
 source = { registry = "https://pypi.org/simple" }
@@ -1612,11 +1634,13 @@ dependencies = [
     { name = "inotify" },
     { name = "inotify-simple" },
     { name = "jupyterlab" },
+    { name = "markdown" },
     { name = "matplotlib" },
     { name = "openai" },
     { name = "pandas" },
     { name = "pillow" },
     { name = "pygments" },
+    { name = "pymdown-extensions" },
     { name = "requests" },
     { name = "streamlit" },
     { name = "streamlit-folium" },
@@ -1640,11 +1664,13 @@ requires-dist = [
     { name = "inotify", specifier = ">=0.2.10" },
     { name = "inotify-simple", specifier = ">=1.3.5" },
     { name = "jupyterlab", specifier = ">=4.4.3" },
+    { name = "markdown", specifier = ">=3.8.2" },
     { name = "matplotlib", specifier = ">=3.10.3" },
     { name = "openai", specifier = ">=1.88.0" },
     { name = "pandas", specifier = "==2.2.3" },
     { name = "pillow", specifier = "==11.2.1" },
     { name = "pygments", specifier = ">=2.19.1" },
+    { name = "pymdown-extensions", specifier = ">=10.16" },
     { name = "requests", specifier = ">=2.32.3" },
     { name = "streamlit", specifier = ">=1.46.0" },
     { name = "streamlit-folium", specifier = ">=0.25.0" },
