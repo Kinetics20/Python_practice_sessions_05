@@ -1,0 +1,8 @@
+admin
+panel
+doc
+docs
+documents
+backup
+backups
+uploads
