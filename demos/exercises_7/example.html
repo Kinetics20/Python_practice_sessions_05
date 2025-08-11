@@ -1,0 +1,272 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>10 projekt&oacute;w w Pythonie, krok po kroku - gynvael.coldwind//vx.log</title>
+<meta property="og:title" content="10 projekt&oacute;w w Pythonie, krok po kroku" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link type="text/css" href="/style.css" rel="stylesheet"/>
+<link type="text/css" href="/inpost.css" rel="stylesheet"/>
+<link rel="shortcut icon" href="https://gynvael.coldwind.pl/fav.ico"/>
+<link rel="alternate" type="application/rss+xml" href="rss_pl.php" title="gynvael.coldwind//vx.log (PL)" />
+<link rel="alternate" type="application/rss+xml" href="rss_en.php" title="gynvael.coldwind//vx.log (EN)" />
+<!--<meta name="viewport" content="width=device-width, initial-scale=1">-->
+<meta property="og:image" content="https://gynvael.coldwind.pl/img/gynvael_logo.png" />
+<style>
+#consulting {
+  display: block;
+  width: fit-content;
+  font-size: 0.8em;
+  text-align: center;
+  background-color: #2c2c5c;
+  color: #a7a7ea;
+  padding: 0.7em;
+  padding-left: 1em;
+  padding-right: 1em;
+  clip-path: polygon(
+    0 10px,
+    10px 0,
+    100% 0,
+    100% calc(100% - 10px),
+    calc(100% - 10px) 100%,
+    0 100%,
+    0 10px
+ );
+  text-decoration: none;
+}
+#consulting:hover {
+  color: #2c2c5c;
+  background-color: #a7a7ea;
+}
+
+@media (min-width: 1120px) {
+  #consulting {
+    display: block;
+  }
+}
+
+
+#training {
+  display: block;
+  width: fit-content;
+  font-size: 0.8em;
+  text-align: center;
+  background-color: #2c2c5c;
+  color: #a7a7ea;
+  padding: 0.7em;
+  padding-left: 1em;
+  padding-right: 1em;
+  clip-path: polygon(
+    0 10px,
+    10px 0,
+    100% 0,
+    100% calc(100% - 10px),
+    calc(100% - 10px) 100%,
+    0 100%,
+    0 10px
+ );
+  text-decoration: none;
+  color: #a7a7ea;
+}
+#training:hover {
+  background-color: #a7a7ea;
+  color: #2c2c5c;
+}
+
+@media (min-width: 1120px) {
+  #training {
+    display: block;
+  }
+}
+
+.top-button-container {
+  position: absolute;
+  left: 220px;
+  top: 120px;
+  width: 484px;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+
+}
+
+</style>
+</head>
+<body>
+<div id="main">
+<div id="header" style="position: relative;">
+  <h1 id="logo"><a href="/?blog=1"><img src="/img/logo.gif" alt="gynvael.coldwin//vx.log"/></a></h1><img src="/images/something_suspicious.png" style="margin: -34px 74px 0px 0px; padding: 0px;" align="right" alt="" />
+  <div class="top-button-container">
+  <a id="consulting" href="https://hexarcana.pl/?utm=gyn-blog">Konsulting i realizacja projektów</a>
+  <a id="training" href="https://hackarcana.com/?utm=gyn-blog-w">hackArcana (edu+CTF)</a>
+  </div>
+</div>
+
+<div id="sidebar"><div class="section"><img src='/img/gynvael-close.jpg' style='margin-left:0.5em' /><br /><ul><li><a href="/">Powrót do strony głównej <big>&#8682;</big></a></li></ul><br /><h3><em>Sections</em></h3>
+<ul>
+  <li><b>lang</b>: <a href="?blog=1&amp;lang=pl"><img src="/images/lang_pl.png" style="margin: 0" alt="PL" /></a> | <a href="?blog=1&amp;lang=en"><img src="/images/lang_en.png" style="margin: 0" alt="EN" /></a></li>
+  <li><b>RSS</b>: <a href="/rss_pl.php"><img src="/images/lang_pl.png" style="margin: 0" alt="RSS PL" /></a> | <a href="/rss_en.php"><img src="/images/lang_en.png" style="margin: 0" alt="RSS EN" /></a></li>
+	<li><br /></li>
+<li><a href='?id=51'>O mnie</a></li>
+<li><a href='?id=181'>Tools</a></li>
+<li><br /></li><li><a href='?id=238'>Poradnik Początkującego Programisty</a></li>
+<li><br /></li><li><a href='https://youtube.com/user/GynvaelColdwind'>&rarr; <span style='background-color:#e62218;color:white;font-weight:bold;padding-left:0.25em;padding-right:0.25em'>YT</span> YouTube (PL)</a></li>
+<li><a href='https://youtube.com/c/GynvaelEN'>&rarr; <span style='background-color:#e62218;color:white;font-weight:bold;padding-left:0.25em;padding-right:0.25em'>YT</span> YouTube (EN)</a></li>
+<li><a href='/discord'>&rarr; <span style='background-color:#7087d8;color:white;font-weight:bold;padding-left:0.25em;padding-right:0.25em'>D</span> Discord</a>
+<li><a href='https://www.facebook.com/GynvaelPL/'>&rarr; <span style='background-color:#4862a3;color:white;font-weight:bold;padding-left:0.25em;padding-right:0.25em'>FB</span> Facebook</a>
+<li><a href='https://infosec.exchange/@gynvael'>&rarr; <span style='background-color:#6b65d8;color:white;font-weight:bold;padding-left:0.25em;padding-right:0.25em'>M</span> Mastodon</a>
+<li><a href='https://twitter.com/gynvael'>&rarr; <span style='background-color:#009def;color:white;font-weight:bold;padding-left:0.25em;padding-right:0.25em'>T</span> Twitter</a>
+<li><a href='https://github.com/gynvael'>&rarr; <span style='background-color:#282d31;color:white;font-weight:bold;padding-left:0.25em;padding-right:0.25em'>GH</span> GitHub</a>
+<br />
+
+  <br />
+  <div style='font-size: 0.8em; line-height:1; text-align: center; width: 160px'>
+  <a href='https://hackarcana.com'><img src='/img/hA-logo.png' style='margin-left: 0;' /></a>
+    <br />
+    <a href='https://hackarcana.com'>Moja strona edu+CTF</a>
+  </div>
+
+  <br />
+  <div style='font-size: 0.8em; line-height:1; text-align: center; width: 160px'>
+  <a href='https://hexarcana.pl'><img src='/img/hexarcana160_2.png' style='margin-left: 0;' /></a>
+    <br />
+    <a href='https://hexarcana.pl'>Moja firma konsultingowa</a>
+  </div>
+
+
+
+
+
+
+
+
+  <br />
+  <div style='font-size: 0.8em; line-height:1.1; text-align: center; width: 160px'>
+    <a href='https://bsideskrakow.pl/'><img src='/img/bsides-krk-25.png' style='margin-left: 0;' /></a>
+    <br />
+    <a href='https://bsideskrakow.pl/'>27.09.2025<br />Kraków, Poland</a>
+  </div>
+
+  <br />
+  <div style='font-size: 0.8em; line-height:1; text-align: center; width: 160px'>
+    <a href='https://pagedout.institute/'><img src='/img/po_issue_5_rbanner.png' style='margin-left: 0;' /></a>
+    <br />
+    <a href='https://pagedout.institute/'>Paged Out! zine</a>
+  </div>
+
+
+<br /><div style='font-size: 0.8em; line-height:1; text-align: center; width: 160px'><a href='https://zrozumiecprogramowanie.pl'><img src='/img/zp160.png' style='margin-left: 0;' /></a><br /><a href='/?id=634'>Informatyczna Książka Roku<br />PTI 2016</a></div><br /><a href='http://ksiegarnia.pwn.pl/Praktyczna-inzynieria-wsteczna,622427233,p.html'><img src='/img/piw160.png' style='margin-left: 0;' /></a><br>  <br />
+  <div style='font-size: 0.8em; line-height:1; text-align: center; width: 160px'>
+    <a href='https://dragonsector.pl/'><img src='/img/ds_logo_160.jpg' style='margin-left: 0;' /></a>
+    <br />
+    <a href='https://dragonsector.pl/'>Dragon Sector CTF Team</a>
+  </div>
+
+</ul></div>
+
+		<div class="section"><h3><em>Links / Blogs</em></h3>
+
+        <ul>
+
+
+          <li><small><b>Security/Hacking:</b></small><ul>
+          <li><a href="https://j00ru.vexillium.org/">j00ru's blog</a></li>
+          <li><a href="https://lcamtuf.substack.com/">lcamtuf's thing</a></li>
+          <li><a href="http://blog.pi3.com.pl/">pi3's blog</a></li>
+          <li><a href="https://lock.cmpxchg8b.com/">tavis ormandy's site</a></li>
+          <li><a href="http://wampir.mroczna-zaloga.org/">pawel golen's blog</a></li>
+          <li><a href="http://zaufanatrzeciastrona.pl/">zaufana trzecia strona</a></li>
+          <li><a href="https://niebezpiecznik.pl/">niebezpiecznik</a></li>
+          <li><a href="https://sekurak.pl/">sekurak</a></li>
+
+</ul></li>
+
+          <li><small><b>Reverse Eng./Low-Level:</b></small><ul>
+          <li><a href="https://www.secnews.pl/">security news</a></li>
+          <li><a href="http://rev3rsed.blogspot.com/">rev3rsed</a></li> <!-- last post: 24.11.2015 -->
+</ul></li>
+
+          <li><small><b>Programming/Code:</b></small><ul>
+          <li><a href="http://asawicki.info/">adam sawicki</a></li>
+</ul></li>
+                </div>
+
+<div class="section"><h3><em><a href="?">Posts</a></em></h3>
+<ul>
+<li><small><a href="?id=803"><span class="val">10 projektów w Pythonie, krok po kroku</span>,</a></small></li>
+<li><small><a href="?id=802"><span class="val">Wstęp do programowania i Pythona - zapisy nadal otwarte</span>,</a></small></li>
+<li><small><a href="?id=798"><span class="val">Wyszedł Paged Out! #5</span>,</a></small></li>
+<li><small><a href="?id=795"><span class="val">Oh My H^ck 2024 i sporo Dragon Sector</span>,</a></small></li>
+<li><small><a href="?id=794"><span class="val">Jak rozkodować nieznany protokół sieciowy i ściągnąć SECRET.PDF</span>,</a></small></li>
+<li><small><a href="?id=792"><span class="val">Wstęp do inżynierii wstecznej</span>,</a></small></li>
+<li><small><a href="?id=790"><span class="val">Darmowe mini-szkolenie: Pliki okiem hackera</span>,</a></small></li>
+<li><small><a href="?id=787"><span class="val">Wyszedł Paged Out! #4</span>,</a></small></li>
+<li><small><a href="?id=784"><span class="val">Nie będzie mnie na CONFidence'24 :(</span>,</a></small></li>
+<li><small><a href="?id=783"><span class="val">Egzamin dla Maszyny: LLMy vs Programowanie – PDF artykułu z Programisty 05/2023</span>,</a></small></li>
+<li><a href="/">&rarr; see all posts on main page</a></li>
+
+	<li><br /></li>
+
+      </ul></div>
+
+
+	<div id="footer">
+          // copyright &copy; Gynvael Coldwind<br/>
+          // design &amp; art by Xa<br/>
+          // logo font (birdman regular) by utopiafonts / Dale Harris<br/>
+          <br/>
+          /* autor będący jednocześnie właścicielem bloga zezwala na próby (również skuteczne) przełamania zabezpieczeń bloga (na poziomie HTTP, server nie mój, zostawmy go w spokoju ;&gt;) bez ponoszenia konsekwencji jakiegokolwiek rodzaju (nie dotyczy to ataków DoS) - czyli w skrócie, uznaje że wszystkie informacje w katalogu bloga są przeznaczone dla osób którym uda się je przeczytać, i wszystkie osoby uprawniam do zmiany ich treści/zawartości jeżeli uda się im ją zmienić) ... dodam że w pewnych miejscach umieściłem zabawne fotki z kotkami, jest ich obecnie 7, i zachęcam do ich poszukania ;&gt; dajcie mi znać jak wszystkie znajdziecie to wrzuce jakieś gratulacje or sth ;&gt; */
+        <br/><br/>
+        <b>Vulns found in blog:</b><br/>
+        * XSS <i>(pers, user-inter)</i> by ged_<br/>
+        * XSS <i>(non-pers)</i> by Anno &amp; Tracerout<br/>
+        * XSS <i>(pers)</i> by Anno &amp; Tracerout<br/>
+        * Blind SQLI by Sławomir Błażek<br/>
+        * XSS <i>(pers) by </i>Sławomir Błażek<br/>
+      </div>
+</div><div id="content">
+        <div class="title"><div class="inside"><div class="inside2"><div class="date">2025-04-28: </div><h2><a href="?id=803">10 projektów w Pythonie, krok po kroku</a></h2><div class="tags">szkolenie</div></div></div></div>
+        <div class="post"><div class="htmlpost"><p><a href="https://python.sekurak.pl"><img src="/img/python-sowa-v1.jpg" align="right" style="max-width: 33%; max-height: auto; margin-left: 0.5em; margin-bottom: 0.25em" alt="Praktyczny Python"></a>7 maja zaczyna się moje nowe szkolenie – <a href="https://python.sekurak.pl">Praktyczny Python: 10 projektów krok po kroku</a> (jest zniżka -50% do końca kwietnia btw). Szkolenie potrwa do 10 lipca i ma kilka celów:</p>
+
+<ul>
+  <li>Zademonstrować (10 razy), jak podejść do pisania czegoś troszkę większego, niż "Hello World" czy klasyczny "kalkulator".<br><br></li>
+  <li>Poszerzyć horyzonty kursantów jeśli chodzi o to co jest możliwe w Pythonie i w jaki sposób co tego podejść.<br><br></li>
+  <li>Pokazać trochę różnych funkcji, bibliotek, czy innych elementów ekosystemu programistycznego.<br><br></li>
+  <li>I pomóc przebić się przez tą barierę, która pojawia się jak się już trochę wejdzie w programowanie, ale nie wiadomo co dalej.</li>
+</ul>
+
+<p>Kilka pierwszych projektów:</p>
+
+<ol>
+<li><b>Ile kodu napisaliśmy? (system plików, pliki tekstowe)</b><br>
+Prosta aplikacja, która skanuje katalogi z naszymi projektami i w przejrzysty sposób wyświetla informacje o poczynionym progresie.<br><br></li>
+
+<li><b>Agent pomocnik (użycie HTTP API i AI)</b><br>
+W Internecie nie brakuje bardzo ciekawych API, z których aż chce się skorzystać. Na przykład OpenAI udostępnia interesujące API do swoich chatbotów, takich jak ChatGPT! Zróbmy w Pythonie swojego prostego agenta pomocnika!<br><br></li>
+
+<li><b>Brute-force! (multithreading, multiprocessing)</b><br>
+Jak łamać hashe w Pythonie? Z pomocą przyjdą wątki (choć nieskutecznie) i multiprocessing!</li>
+</ol>
+
+<p>Pełna lista tematów szkolenia znajduje się na <a href="https://python.sekurak.pl">https://python.sekurak.pl</a></p>
+
+<p>Do zobaczenia w maju!</p></div>
+        <div class="postcomments"></div>
+        </div>
+<div id="comments"><h2>Add a comment:</h2>
+
+<form action="?id=803" method="POST">
+  <table>
+    <tr><td>Nick:</td><td style="width: 60%"><input name="nick"/></td></tr>
+    <tr><td>URL (optional):</td><td style="width: 60%"><input name="url"/></td></tr>
+    <tr><td>Math captcha: 5 &lowast; 2 &#xff0b; 5 = </td><td style="width: 60%"><input name="captcha"/></td></tr>
+    <tr><td colspan="2">
+        <textarea name="text"></textarea>
+  <input type="hidden" name="asdf" value="22cba7e892399b8eb29f1a7c72657db1"/>
+  <input type="submit" class="button" />
+</td></tr>
+  </table>
+</form>
+</div></div><div class="clear"></div>
+</div>
+</body>
+</html>
