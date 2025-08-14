@@ -1,0 +1,37 @@
+{% extends "main.html.j2" %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='main.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid" id="device-container">
+    <!--
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="border border-secondary rounded p-4">
+                <div class="row">
+                    <div class="col-4 text-center">
+                        <div class="mb-3 big-icon">💻</div>
+                        <h5 class="text-muted">192.168.1.100</h5>
+                    </div>
+                    <div class="col-8">
+                        <h6 class="text-muted mb-3">Network Scan Results:</h6>
+                        <div class="bg-light p-3 rounded">
+                            <code>
+                                PORT     STATE    SERVICE<br>
+                                22/tcp   open     ssh<br>
+                                80/tcp   open     http<br>
+                                443/tcp  open     https<br>
+                                3306/tcp open     mysql<br>
+                                8080/tcp open     http-proxy
+                            </code>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>-->
+
+</div>
+{% endblock %}

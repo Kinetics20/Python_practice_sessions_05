@@ -1,11 +1,57 @@
-from flask import Flask
+from flask import Flask, render_template, session, redirect, request
 
 app = Flask(__name__)
+app.static_folder = 'static'
+app.template_folder = 'templates'
+app.jinja_env.autoescape = True
+app.secret_key = 'mwie-9jf-92=93u-9j2ff-923j9fj-9j2f9j2f'
 
 @app.route('/')
 @app.route('/index.html')
 def index():
-    return 'Home Page'
+    if not session.get('logged_in'):
+        return redirect('/login', 302)
+
+    return render_template(
+        'index.html.j2',
+
+    )
+
+@app.route('/log')
+def view_log():
+    if not session.get('logged_in'):
+        return redirect('/login', 302)
+
+    return render_template(
+        'log.html.j2',
+        log_entries = [
+            ('2025-08-14', 'STH'),
+            ('2025-08-14', 'HOME'),
+        ]
+    )
+
+@app.route('/login', methods=['GET'])
+def login_get():
+    return render_template('login.html.j2')
+
+@app.route('/login', methods=['POST'])
+def login_post():
+    passwd = request.form.get('password')
+
+    if passwd == 'password':
+        session['logged_in'] = True
+        return redirect('/', 302)
+
+    return render_template(
+        'login.html.j2',
+        error='Authentication failed.'
+    )
+
+@app.route('/logout')
+def logout():
+    if 'logged_in' in session:
+        del session['logged_in']
+    return redirect('/login', 302)
 
 if __name__ == '__main__':
     app.run(debug=True)
