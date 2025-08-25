@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Give me API!</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      background: #f0f2f5;
+      width: 100vw;
+      height: 100vh;
+    }
+    body {
+      min-height: 100vh;
+      min-width: 100vw;
+      box-sizing: border-box;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .main-content {
+      background: #ffffff;
+      border-radius: 10px;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+      width: 90vw;
+      max-width: 800px;
+      height: 85vh;
+      min-height: 400px;
+      display: flex;
+      flex-direction: column;
+      padding: 24px 20px 20px 20px;
+      box-sizing: border-box;
+    }
+    #get-flag-btn {
+      width: 100%;
+      font-size: 1.5rem;
+      padding: 18px 0;
+      border: none;
+      border-radius: 8px;
+      background: #4f8cff;
+      color: #fff;
+      font-weight: bold;
+      cursor: pointer;
+      margin-bottom: 18px;
+      transition: background 0.2s;
+    }
+    #get-flag-btn:hover {
+      background: #2563eb;
+    }
+    #output-pre {
+      flex: 1 1 0;
+      width: 100%;
+      background: #f7f9fa;
+      border-radius: 8px;
+      border: 1px solid #e0e4ea;
+      padding: 16px;
+      font-size: 1.1rem;
+      overflow-y: auto;
+      overflow-x: hidden;
+      white-space: pre-wrap;
+      word-break: break-word;
+      margin: 0;
+      box-sizing: border-box;
+    }
+  </style>
+</head>
+<script>
+function main() {
+  const button = document.getElementById('get-flag-btn');
+  if (button) {
+    button.addEventListener('click', handle_button);
+  }
+}
+document.addEventListener('DOMContentLoaded', main);
+
+function log_clear() {
+  const pre = document.getElementById('output-pre');
+  if (pre) {
+    pre.textContent = '';
+  }
+}
+
+function log_add(text) {
+  const pre = document.getElementById('output-pre');
+  if (pre) {
+    pre.textContent += text;
+  }
+}
+
+async function apiSha256(text) {
+  const response = await fetch('/api/sha256', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ text })
+  });
+  const data = await response.json();
+  if (!response.ok) {
+    const error = new Error(data.error || 'API error');
+    error.status = response.status;
+    error.info = data;
+    throw error;
+  }
+  return data.hash;
+}
+
+async function apiCalc(a, b, op) {
+  const response = await fetch('/api/calc', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ a, b, op })
+  });
+  const data = await response.json();
+  if (!response.ok) {
+    const error = new Error(data.error || 'API error');
+    error.status = response.status;
+    error.info = data;
+    throw error;
+  }
+  return data.result;
+}
+
+async function apiReverse(text) {
+  const response = await fetch('/api/reverse', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ text })
+  });
+  const data = await response.json();
+  if (!response.ok) {
+    const error = new Error(data.error || 'API error');
+    error.status = response.status;
+    error.info = data;
+    throw error;
+  }
+  return data.reversed;
+}
+
+async function apiMostFreq(text) {
+  const response = await fetch('/api/most-freq', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ text })
+  });
+  const data = await response.json();
+  if (!response.ok) {
+    const error = new Error(data.error || 'API error');
+    error.status = response.status;
+    error.info = data;
+    throw error;
+  }
+  return data['most-freq'];
+}
+
+
+async function handle_button() {
+  log_clear();
+
+  try {
+    log_add("-=- Running basic tests on the APIs -=-\n");
+
+    log_add("Testing /api/sha256:    ");
+    const hash = await apiSha256("hackArcana");
+    if (hash !== "7a940ec03f5c74eb7f5cf54f08ddd7214c4562f69ed30348e6ea4cd5d1cf1e2c") {
+      log_add("❌\n");
+      throw new Error("SHA256 API test failed (invalid result)");
+    } else {
+      log_add("✅\n");
+    }
+
+    log_add("Testing /api/calc op +: ");
+    let calc_result = await apiCalc(1, 2, '+');
+    if (calc_result !== 3) {
+      log_add("❌\n");
+      throw new Error("Calc API test failed (invalid result)");
+    } else {
+      log_add("✅\n");
+    }
+
+    log_add("Testing /api/calc op -: ");
+    calc_result = await apiCalc(5, 3, '-');
+    if (calc_result !== 2) {
+      log_add("❌\n");
+      throw new Error("Calc API test failed (invalid result)");
+    } else {
+      log_add("✅\n");
+    }
+
+    log_add("Testing /api/calc op *: ");
+    calc_result = await apiCalc(6, 4, '*');
+    if (calc_result !== 24) {
+      log_add("❌\n");
+      throw new Error("Calc API test failed (invalid result)");
+    } else {
+      log_add("✅\n");
+    }
+
+    log_add("Testing /api/reverse:   ");
+    const reverse_result = await apiReverse("HexA");
+    if (reverse_result !== "AxeH") {
+      log_add("❌\n");
+      throw new Error("Reverse API test failed (invalid result)");
+    } else {
+      log_add("✅\n");
+    }
+
+    log_add("Testing /api/most-freq: ");
+    const most_freq_result = await apiMostFreq("AABBBBCCD");
+    if (most_freq_result !== "B") {
+      log_add("❌\n");
+      throw new Error(
+        "Most frequent character API test failed (invalid result)"
+      );
+    } else {
+      log_add("✅\n");
+    }
+
+    log_add("All tests passed!\n\n");
+
+    log_add("-=- Getting the flag -=-\n");
+
+    log_add("Decoding the flag");
+
+    const flag = await Promise.all(WHAT_THE_TABLE.map(async row => {
+      const ch0 = await apiMostFreq(row[0]);
+      const ch1 = await apiMostFreq(row[1]);
+      let ch2 = await apiCalc(row[2], row[3], '+');
+      let ch3 = await apiCalc(row[4], (await apiCalc(row[5], 2, '*')), '-');
+
+      ch2 = String.fromCharCode(ch2);
+      ch3 = String.fromCharCode(ch3);
+
+      const l1 = await apiReverse(ch0 + ch1 + ch2 + ch3);
+      const hash = await apiSha256(l1);
+      const hex = hash.slice(0, 2);
+      const code = parseInt(hex, 16);
+      log_add('.');
+      return String.fromCharCode(code);
+    }));
+
+    log_add(`\nFlag: ${flag.join('')}\n`);
+
+    log_add("Done!\n");
+  } catch (error) {
+    log_add(`Error: ${error.message}\n`);
+    if (error.status) {
+      log_add(`Status: ${error.status}\n`);
+    }
+    if (error.info) {
+      log_add(`Info: ${JSON.stringify(error.info)}\n`);
+    }
+  }
+}
+
+// Just implement the APIs, it will decode itself ;)
+WHAT_THE_TABLE = [
+  [ "dXsXXIXGXXXXXsXCXZXzZXXVXXXgXWXXXXsXi5XX4FkKZTXXS9lWmscXXX9Xkr8XX", "yTJJ6M9JJJJJMkFLJgJJ9NJJJFJWJJuJJJJJqVJEJJSBJJJJPJJJErDhGJLJSLUcM", 77, 10, 99, 7 ],
+  [ "Ej666P6QK6l666tXo66k2IN6cF666M66666L6Xn066nm66rwX06Vf6f66xK661666", "222wF22yK2i6Y22q2222SMuM8w222uugl2K22j222e2cd2222J22w2V2q2z2N2b2k", 72, 16, 77, 6 ],
+  [ "Uuuz38QuuYjuAuFt1uDuuu0uuuMuuuuuKVRuAuunU1uuuuulTuuuAUuuuOPLvuouf", "iV4V7VVVV2bVVFVVV9VVVeVV20VkyVSVVFVjfV9FCLVKitVVVc8IVCnVVDVVVVuVQ", 49, 17, 77, 6 ],
+  [ "4f4F444v4J6X4z4x44W4Xo444444HDfw04Byrp544V4n44OQs4J44U44BJ444j444", "6OuumuqNCCuuNWXuuguuuXuHu6uduuzuMLuuY6W2aYuuuuuurVouuuuFuq7uwVuuu", 59, 16, 132, 10 ],
+  [ "zzjz7zMz2zzzPQzzzzF6zMBzYSzzOzq6YzzwukzzJzBzzSIezzrz0zzzdrmwzWTzz", "RbbbbbbPDbBbbbbUHbb0ubbV9bbbFGbbKbZMbMbgOPblbQbbEbrObGbbVJcZbbW0m", 40, 11, 121, 10 ],
+  [ "csxxSSxHxxnYAxQPoxA5oxxxTKx5xpaxAxxxxxGxqdxYxAxxmxxx8xxIxxxhExsnx", "yyyyFyyyDmykeFytyTRyRyynyTsqxuoJyKyyyyTyyIyMyqyGyrayy8yyGryy5yrTy", 89, 15, 117, 9 ],
+  [ "tBBBISBIBqBBBGB79BGBBBBoBN1BYBlhBB7BBzepBBvB0ZHBuLBLl1BrBBqBBwBsB", "ccjVccccicfYwrcccctc3Rc9hcccqccccaccCcwfcyJOKZcCJcyHc6cccEMicbPcc", 53, 14, 129, 9 ],
+  [ "BB0PB8fBcBBBSOBBLByFBBBBBprLBBBBZ6BKBBKB6nYyjBlBBB8cBBBTcBc2BBlBj", "IQpppppWp49lppppRApNwopphpWGpmpNpXNpppp4uubH3EWfpCgprpppXppjppppp", 78, 20, 132, 9 ],
+  [ "QfffOpfCf1fJfffff0XffTeffvXf8fagGffhfQfOfnofQ12KffffflnOffNFfffuf", "ee7SJeeepeeeeMEeceeeJeeeexRNZ0eeTeEeebwXzsMJxees0Cgeee5ree3meeeeY", 30, 19, 113, 6 ],
+  [ "rrxyyy0yTSyybyyyyNNyeyzyyyyyyyFUSAGyyfAxyyBy5byyby3Yyv9yXywyU3Uyy", "oHaaawaaLn5SLaBaXQaaajaXaaLgjaaazaOaYwaaaaaaOaa2aaaaWbaQ6Tc1kaaaT", 101, 18, 84, 8 ],
+  [ "EKLLLLmULLLzTZpLLoLL3LJLoILiQLLLLFLLLLLXL0DLR6q6LLLyLVaL2RL8RLL7I", "NNSNBNfNNNNJNNNNNvNyNNNQeNNNNNVSLT7tzNuNNzNiQp1eWNuSyNNNNNuNi8NSN", 40, 16, 113, 7 ],
+  [ "XltXXXXXS2JU10Waf1X0XpXXXAjXXC9XGzsXXX5DpBXXXXXtX1XcXXXaXXXXIuXpX", "ttZtttttttbttt5tfVDtdtttXtgttIEWzttAutstd1QtEtxt0rtr7LtR9utqttAwt", 98, 12, 134, 10 ],
+  [ "ETEEEEh9YGEEebEEExAiS9EgE5sEEEnEFsEETEpEeEEghEqSiEEZAEEEEEuEc3EOE", "kzkkfsjktk5OFkkHk6kkgkk3k8EDokkRkk9JkCLkkkkkPQkckacLkkkkkkq8kkw4k", 108, 14, 60, 5 ],
+  [ "sPsswsxgs5EMs5nns7Uss4wsUmsssssQ4vgPsssssKss1jssssJsss6sglsgCsWUs", "Yowqq9qPqhqqj9qZxqvqYqqAqqq2cqGEq3aqLqnqqqqqIqeqqqJqBqqqyLqHPqqgf", 74, 13, 61, 6 ],
+  [ "TTTTT4Tm7yqTTTTbTTTBTjTl8TTmYT0jgTTETuBZTTTwTfZTTJTTMQMTsATXTT8TT", "ccNcccC1cMcccKcRYcccoRYbcccC9ccMcacGYcccoU6zkcWAOumcHgZcccccecGcc", 40, 11, 67, 8 ],
+  [ "VDbDDDDvYcDDDvruDDDDBMleD7FDdDX6D6DDO1DPDXDDZDYSRnDDDwDDKDDn8DFDD", "tSq0FSBCESS9SSxDSSOS8jSSS7LYSSxLSS0SZcufSSMSSS1SSSSShPxqMSSjSSS5S", 102, 20, 68, 10 ],
+  [ "08003v0dT0y00h00QH7G000zGr0E00000lTTLz030aOL00eN00000t00Qh04O00q0", "DQUMwdtUcn6TUZVUUUUm5uUUsUUKiUUgUcUmUUUUUUUiuG8UrUZUUTUU1UpUUu2UU", 87, 15, 121, 8 ],
+  [ "UUqOUUUtUVU4EUj9Z5xU1U2UigUcTUUm2d9zUU5UUUUxPUUCUhUqfUUUUUUUl1XUU", "fUxIIzUIbMiWMoItIIJI3IIIIIIMIpI2OSIIICIlIIIsvAIGoI8IIISIuIIcNIPII", 68, 14, 118, 5 ],
+  [ "DDDdD6yKiDDDDSugDuDDDD3Dm25DDabDDFDRNExDDD9DiDDD0qnDbDqeDuDDnDFDn", "kO4KNOaIvOOmOOOOlmdcOlOnO4OIROOOOOOKeO8XOO6wOrOOVwWOOUA4OOOvOOnOO", 100, 13, 84, 5 ],
+  [ "LL3S0SLyVNSSMS4hSSRSSzSSSS8dCSpeSU5SwHSSSvS2SGKYSkSmSASmSSSSSSSST", "NKiCKKAKKUKMKKKKKK3KKKKKaSSZvvm3wKc6sKKKWXKKdKKKK9aKKKYrktKKKn0QK", 52, 15, 65, 6 ],
+  [ "pnqqqOqqqqEqqCqqqTMSqqIVqOkqIqqIqyujqqDbqqqaqmnzqqQWh3qqN2qqqPxbq", "gzzzzezzBA6Xzzzhzzzzzzhzzzzzzzzkz7zXzhszUb0wYiszzzwJzfzUgFjz8SLaP", 59, 17, 139, 9 ],
+  [ "8EP9k0u8Q988bhhq8CU88y88WprQ8888hl88fZcf8rv88C888888887u8b88888a8", "nKettrvttHtspXBttxtt2NtvittttUVtctM3tltttFtGtHYntrttttttTttOtqMtT", 94, 11, 93, 6 ],
+  [ "0ZUDDM9nDDTDDD1DDvDDDeDDDDDDDRDXDDDDfiQDD5DXWDJDCDDDEpDDwDDDA7Zql", "g0MiMiiiepiiCPiXiih1yiCiiiiiigibiOiiiiVJ28QiiiiFiiiQiiM5DCriiJSYi", 45, 11, 79, 6 ],
+  [ "nXdRRPRrFRlRMiORTpRs5ARBRR4oRRwRA2R7tRRRRRbOARRRRReRRRRE7fR1RR3RR", "2E7EEEEOEEdcEEi9cTErECHHPpE5VEEEiEE4EELE5EEE4EIED5fBESEgEE0EEXEEE", 51, 16, 107, 9 ],
+  [ "I41mmFmhmzmmhm6msKmmdmGRYmm6a9hmmmAOmmsmLmvmmm2mDkRmmmmmmmmMgwmQM", "UUwAUUUUUYUbUUBU77UUUidqvUUrZToUCUIUUAUraUDN3UVUYUUU3TUZU1UnUUhUU", 63, 10, 81, 6 ],
+  [ "oooXognQb7oQGoSAoooFMyooUydooo8opoooXyooodooioorBQooo4owoIoEQEkoo", "OO5OOOOUOOdJ4fTDsOgOb7OOFkOfOxOOOOzWOO5Ow7OOzwEObOrPOOOOjOOW8OOta", 100, 11, 132, 5 ],
+  [ "tliutuuvR5uiuxxAuuLuuFuuuuuuVurnucYnuuuuuuuuHuDOuYt5uTuuu7ueUnuwu", "HKWHWWHInH3HtHHyHH2HHXUYHbCHtXaHHHHFHH9uHHHfHH2HHrcHHnH8H0aHx6HHy", 58, 11, 86, 9 ],
+  [ "S6JSSFSSSSSpaSa4nHgmxbUsSSSfSySSSjSMGSSsPsSS7ugESSufSSSSSSOZSSStS", "vLLLLLrpuaVoHcbLoGyLLLLLLLLLLUWLLLULLhL0LLLLLA3LLUjwLLwLIPLL8n7LG", 47, 19, 116, 7 ],
+  [ "VVV1VVyVFVVVV9VVz2J4HVZVVVVQVVuJjaVmVpDqVKNjVvV9nVVYEVVqTVuVVVVW9", "dIj0UZ0l0n5O00s0A00002N00000000G01N7Y0y00n0yzM00000TW0005RN0t06P4", 40, 15, 134, 6 ],
+  [ "llllltllTpillrl3lnldwRXllwuSllErWlfllKlJOlllllDHlmIlllllZlAQvllal", "o8ooV2o1PVKozoHCooaQdoX4Tjoooooookmooozoo5oS8sooooS1KooboooXfoooo", 104, 15, 117, 6 ],
+  [ "xiiYVhiNiiiAERiiiiiiiiLi6biNjiiiiifiJiiiLOUpB1iXiIii4izbiLYliimNV", "e6e8eeeFesLAeZeSeeeekeKeenFoeeYeteRDeeeH7eeeeyYueewaHieXZeePeeee2", 61, 15, 135, 7 ],
+  [ "pgppNrp1C77pppZpxPCppfppDpUpVpppjpppfopFZppBwppLxpYOphpppppEWpsyp", "dN5diXddddddad5Nxddpd5dfddCdYdhGdtvKdLddodsDdOdddu8JjdddkddxJdVwd", 72, 11, 109, 6 ],
+  [ "NfNNNNNNdMNDNNNnSbpNNNNZNckNgeNNOdNpNpvcNGNoeEaNNNoNNirENG2pNNNNN", "xG7xixrxxxOxyxx1xXxxxWkxxrx7zDxxxxxxExxxFjLxB58DxuVxpixxh8xkoGxxx", 40, 15, 95, 8 ],
+  [ "i31fh11el1511l1MVB1111PozKb1G1fxG6F111111a11ya1W11J1131111115ks1a", "x6JPQmhJJ3JhJ1J3JJJJJuJ9JJfde9rxJcJsCJJJJ9JJJTJtJJJJJ5JJJuJY0oo5w", 82, 19, 127, 6 ],
+  [ "zNI4nnnn6nnnESnQcnGSpnnniz6nTnznnnMbanTvnLn3nvkhnndnnnQninnnnninn", "i66686L66If6A6666Di66t666Y6636696C6SB66P61J6776i66N66B657Y6BIDd6J", 104, 13, 81, 5 ],
+  [ "POpppDpppppUcpnpppGpUpEppTpwpppppZppWbOLycpEWpMpYppp76HEZppVpFpvx", "Ye5eV4eeze7qeeeeeeeFqheleCeeeGZeeeeeeeeeZgXeyNebiQeY61eeje79HeEeB", 59, 11, 114, 8 ],
+  [ "3N3QS333833N3Yls3W3P3zwt3333N3aGZ333m3f3Foo3332v3333P3KV3333U3Z00", "Iq9sr4InIIIZaIInI1qsb0IIIIE1IIZIIuzIIkfIIImJSAIIIIIIOIItIQIQePII2", 59, 17, 107, 10 ],
+  [ "Axnno8nPnnUnlh8n9n9xLc6nhnnSnnanhEnnnDnnIQnknnY7AgnnnnnnnnnnyYcnn", "6lF6c6kyGxJ6666y66660zs6666Q6f6j6vJMA66U6Vr6mD6666GZ62r666Z6T86b6", 84, 15, 69, 8 ],
+  [ "f33Lp33883I3N3m8Qt33C33Fw3oN33I3o33lR333i333333343hs338l3c343yxaZ", "tm2ErJJpXJJJ7JJJJJPJJKzKJJPJYJJJJJJSLAJBMJMJSJJJLJFIJRJJJixoA8jnJ", 39, 12, 126, 6 ],
+];
+
+
+
+</script>
+<body>
+  <div class="main-content">
+    <button id="get-flag-btn">Get the flag!</button>
+    <pre id="output-pre"></pre>
+  </div>
+</body>
+</html>
