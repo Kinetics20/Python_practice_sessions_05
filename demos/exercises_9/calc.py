@@ -51,13 +51,26 @@ class CalcWindow:
         self.entry.delete(0, tk.END)
         self.entry.insert(0, text)
 
+    def set_op(self, op):
+        self.op = op
 
-    def op_mul(self ):
         if self.acc is None:
             self.acc = self.digits
             self.digits = 0
+        else:
+            self.op_result()
 
-        self.op = '*'
+    def op_mul(self):
+        self.set_op('*')
+
+    def op_div(self):
+        self.set_op('/')
+
+    def op_add(self):
+        self.set_op('+')
+
+    def op_sub(self):
+        self.set_op('-')
 
     def op_result(self):
         if self.op == '*':
@@ -75,13 +88,13 @@ class CalcWindow:
 
             res = self.acc // self.digits
         else:
-            res = self.digits
+
+            return
 
         self.set_entry(str(res))
         self.acc = res
         self.digits = 0
         self.op = ''
-
 
     def __init__(self, root):
         self.acc = None
@@ -106,11 +119,7 @@ class CalcWindow:
             (8, 1, 0, self.pressed_8),
             (9, 2, 0, self.pressed_9),
         ]:
-            def button_clicked():
-                print(i)
-
             button = ttk.Button(digits_frame, text=f'{i}', padding=10, command=fnc)
-
             button.grid(row=y, column=x)
 
         button = ttk.Button(digits_frame, text="0", padding=10, command=self.pressed_0)
@@ -119,10 +128,13 @@ class CalcWindow:
         ops_frame = ttk.Frame(root)
         ops_frame.grid(row=1, column=1)
 
-        for i, op in enumerate([
-            '+', '-', '*', '/'
+        for i, (op, fnc) in enumerate([
+            ('+', self.op_add),
+            ('-', self.op_sub),
+            ('*', self.op_mul),
+            ('/', self.op_div)
         ]):
-            button = ttk.Button(ops_frame, text=op, padding=10)
+            button = ttk.Button(ops_frame, text=op, padding=10, command=fnc)
             button.grid(row=i, column=0)
 
         result_frame = ttk.Frame(root)
