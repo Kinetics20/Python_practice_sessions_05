@@ -20,6 +20,7 @@ dependencies = [
     "openai>=1.88.0",
     "pandas==2.2.3",
     "pillow==11.2.1",
+    "pygame>=2.6.1",
     "pygments>=2.19.1",
     "pymdown-extensions>=10.16",
     "requests>=2.32.3",
