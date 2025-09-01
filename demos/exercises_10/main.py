@@ -9,13 +9,65 @@
 
 
 import pygame
+import random
 
 PLAYER_SPEED = 500
+ASTEROID_COUNT = 200
+ASTEROID_SPEED_X = -200, 200
+ASTEROID_SPEED_Y = 50, 300
+BOOM_FPS = 30
+DEBUG = False
 
 class Player:
-    def __init__(self, x, y):
+    def __init__(self, state, x, y):
         self.x = x
         self.y = y
+        self.art = state.assets['ship']
+        self.rect = pygame.Rect(x, y, 59, 42)
+
+    def logic(self):
+
+        self.rect.x = int(self.x)
+        self.rect.y = int(self.y)
+
+    def draw(self, screen):
+        screen.blit(
+            self.art, (self.x, self.y)
+        )
+
+        if DEBUG:
+            pygame.draw.rect(screen, (0, 255, 0), self.rect, width=1)
+
+
+class Boom:
+    def __init__(self, state, x, y, vx, vy):
+        self.x = x
+        self.y = y
+        self.vx = vx
+        self.vy = vy
+        self.spriteset = state.assets['boom']
+        self.frame = 0
+        self.w = 64
+        self.h = 64
+
+    def logic(self, dt):
+        self.x += self.vx * dt
+        self.y += self.vy * dt
+
+        self.frame += BOOM_FPS * dt
+
+        if int(self.frame) >= 16:
+            return False
+
+        return True
+
+    def draw(self, screen):
+        frame = int(self.frame)
+
+        sx = (frame % 4) * 64
+        sy = (frame // 4) * 64
+
+        screen.blit(self.spriteset, (self.x, self.y), area=(sx, sy, 64, 64))
 
 
 class Asteroid:
@@ -27,6 +79,7 @@ class Asteroid:
         self.frames = state.assets['asteroid']
         self.w = self.frames[0].get_width()
         self.h = self.frames[0].get_height()
+        self.rect = pygame.Rect(self.x + 16, self.y + 16, self.w - 32, self.h - 32)
 
     def logic(self, dt):
         self.x += self.vx * dt
@@ -35,10 +88,16 @@ class Asteroid:
         if self.x < 0 - self.w or self.y >= state.h or self.x >= state.w:
             return False
 
+        self.rect.x = int(self.x + 16)
+        self.rect.y = int(self.y + 16)
+
         return True
 
-    def draw(self):
-        pass
+    def draw(self, screen):
+        screen.blit(self.frames[0], (self.x, self.y))
+
+        if DEBUG:
+            pygame.draw.rect(screen, (255, 255, 0), self.rect, width=1)
 
 
 
@@ -51,9 +110,12 @@ class GameState:
         self.ship_h = assets['ship'].get_height()
         self.assets = assets
         self.player = Player(
+            self,
             (self.w - self.ship_w) // 2,
             self.h - self.ship_h - 40
         )
+        self.asteroids = []
+        self.booms = []
 
     def logic(self, dt):
         for event in pygame.event.get():
@@ -74,13 +136,55 @@ class GameState:
             if self.player.x >= self.w - self.ship_w:
                 self.player.x = self.w - self.ship_w
 
+        self.player.logic()
+
+        if len(self.asteroids) < ASTEROID_COUNT:
+            if random.randint(0, 4) == 0:
+                asteroid = Asteroid(
+                    self,
+                    random.randint(100, self.w - 164),
+                    -64,
+                    random.randint(*ASTEROID_SPEED_X),
+                    random.randint(*ASTEROID_SPEED_Y)
+                )
+                self.asteroids.append(asteroid)
+
+        # next_asteroids = []
+        # for asteroid in asteroids:
+        #     if asteroid.logic():
+        #         next_asteroids.append(asteroid)
+        # self.asteroids = next_asteroids
+
+        self.asteroids = [
+            asteroid for asteroid in self.asteroids if asteroid.logic(dt)
+        ]
+
+        asteroids_hit = self.player.rect.collidelistall(self.asteroids)
+        if asteroids_hit:
+            asteroids_hit.sort(reverse=True)
+            for idx in asteroids_hit:
+                asteroid = self.asteroids.pop(idx)
+                boom = Boom(
+                    self, asteroid.x, asteroid.y, asteroid.vx, asteroid.vy
+                )
+                self.booms.append(boom)
+
+        self.booms = [
+            boom for boom in self.booms if boom.logic(dt)
+        ]
+
         return True
 
     def draw(self):
         self.screen.blit(self.assets['bg'], (0, 0))
-        self.screen.blit(
-            self.assets['ship'], (self.player.x, self.player.y)
-        )
+
+        self.player.draw(screen)
+
+        for asteroid in self.asteroids:
+            asteroid.draw(self.screen)
+
+        for boom in self.booms:
+            boom.draw(self.screen)
 
 
 def init(screen):
