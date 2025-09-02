@@ -15,18 +15,22 @@ PLAYER_SPEED = 500
 ASTEROID_COUNT = 200
 ASTEROID_SPEED_X = -200, 200
 ASTEROID_SPEED_Y = 50, 300
+LASER_SPEED = -400
+LASER_COOLDOWN = 0.2
 BOOM_FPS = 30
 DEBUG = False
+
 
 class Player:
     def __init__(self, state, x, y):
         self.x = x
         self.y = y
+        self.w = 59
+        self.h = 42
         self.art = state.assets['ship']
         self.rect = pygame.Rect(x, y, 59, 42)
 
     def logic(self):
-
         self.rect.x = int(self.x)
         self.rect.y = int(self.y)
 
@@ -70,6 +74,32 @@ class Boom:
         screen.blit(self.spriteset, (self.x, self.y), area=(sx, sy, 64, 64))
 
 
+class Laser:
+    def __init__(self, state, x, y):
+        self.x = x
+        self.y = y
+        self.asset = state.assets['laser']
+        self.w = self.asset.get_width()
+        self.h = self.asset.get_height()
+        self.rect = pygame.Rect(self.x, self.y, self.w, self.h)
+
+    def logic(self, dt):
+        self.y += LASER_SPEED * dt
+
+        if self.y < 0 - self.h:
+            return False
+
+        self.rect.y = int(self.y)
+
+        return True
+
+    def draw(self, screen):
+        screen.blit(self.asset, (self.x, self.y))
+
+        if DEBUG:
+            pygame.draw.rect(screen, (255, 0, 0), self.rect, width=1)
+
+
 class Asteroid:
     def __init__(self, state, x, y, vx, vy):
         self.x = x
@@ -100,7 +130,6 @@ class Asteroid:
             pygame.draw.rect(screen, (255, 255, 0), self.rect, width=1)
 
 
-
 class GameState:
     def __init__(self, screen, assets):
         self.screen = screen
@@ -114,8 +143,10 @@ class GameState:
             (self.w - self.ship_w) // 2,
             self.h - self.ship_h - 40
         )
+        self.laser_cooldown = 0
         self.asteroids = []
         self.booms = []
+        self.bullets = []
 
     def logic(self, dt):
         for event in pygame.event.get():
@@ -135,6 +166,16 @@ class GameState:
             self.player.x += PLAYER_SPEED * dt
             if self.player.x >= self.w - self.ship_w:
                 self.player.x = self.w - self.ship_w
+
+        self.laser_cooldown -= dt
+        if keys[pygame.K_SPACE]:
+            if self.laser_cooldown <= 0:
+                self.laser_cooldown = LASER_COOLDOWN
+                bullet = Laser(self,
+                               self.player.x + (self.player.w - 3) // 2,
+                               self.player.y + 10
+                )
+                self.bullets.append(bullet)
 
         self.player.logic()
 
@@ -173,10 +214,35 @@ class GameState:
             boom for boom in self.booms if boom.logic(dt)
         ]
 
+        self.bullets = [
+            bullet for bullet in self.bullets if bullet.logic(dt)
+        ]
+
+        for bullet in self.bullets:
+            asteroids_hit = bullet.rect.collidelistall(self.asteroids)
+            if asteroids_hit:
+                asteroids_hit.sort(reverse=True)
+                for idx in asteroids_hit:
+                    asteroid = self.asteroids.pop(idx)
+                    boom = Boom(
+                        self, asteroid.x, asteroid.y, asteroid.vx, asteroid.vy
+                    )
+                    self.booms.append(boom)
+
+                    boom = Boom(
+                        self, bullet.x, bullet.y, 0, LASER_SPEED
+                    )
+                    self.booms.append(boom)
+
+
         return True
 
     def draw(self):
         self.screen.blit(self.assets['bg'], (0, 0))
+
+        for bullet in self.bullets:
+            bullet.draw(screen)
+
 
         self.player.draw(screen)
 
@@ -200,6 +266,7 @@ def init(screen):
         'boom': pygame.image.load('assets/exp2_0.png'),
         'asteroid': asteroid_anim,
         'ship': pygame.image.load('assets/shipsheetparts.png'),
+        'laser': pygame.image.load('assets/laser.png'),
     }
 
     state = GameState(screen, assets)
