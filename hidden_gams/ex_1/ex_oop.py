@@ -8,7 +8,8 @@ def yolo(obj):
 
 Magic = type('Magic', (object, ), {
     'magic': 42,
-    '__init__': yolo
+    '__init__': lambda obj: setattr(obj, 'xd', 42),
+    'true_magic': classmethod(lambda obj: setattr(obj, 'xd', 42)),
 })
 m = Magic()
 print(m.magic)
