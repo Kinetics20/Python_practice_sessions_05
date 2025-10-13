@@ -1,4 +1,5 @@
 import inspect
+from dataclasses import dataclass
 from pprint import pprint
 
 
@@ -27,6 +28,7 @@ def auto_repr(cls):
     setattr(cls, '__repr__', synthesized_repr)
 
     return cls
+
 
 @auto_repr
 class Position:
@@ -95,6 +97,7 @@ print(p)
 class EarthPosition(Position):
     pass
 
+
 class MarsPosition(Position):
     pass
 
@@ -120,14 +123,32 @@ class Location:
         return self.name
 
 
-hong_kong = Location('Hong Kong', EarthPosition(22.29, 114.16))
-cape_town = Location('Cape Town', EarthPosition(-33.93, 18.42))
+@dataclass(eq=True, frozen=False)
+class Location2:
+    name: str
+    position: Position
 
-ep = EarthPosition(22.29, 114.16)
-mp = MarsPosition(22.29, 114.16)
+    def __post_init__(self):
+        if self.name == '':
+            raise ValueError('Cannot assign empty location name')
 
-pprint(ep == mp)
+
+hong_kong = Location2('Hong Kong', EarthPosition(22.29, 114.16))
+hong_kong_2 = Location2('Hong Kong', EarthPosition(22.29, 114.16))
+cape_town = Location2('Cape Town', EarthPosition(-33.93, 18.42))
+
+# ep = EarthPosition(22.29, 114.16)
+# mp = MarsPosition(22.29, 114.16)
+#
+# pprint(ep == mp)
 
 # print(f'{hong_kong!r}')
 # print(f'{cape_town!r}')
 # print(f'{ep!r}')
+# hong_kong_2.position._longitude = 40
+hong_kong.name = ''
+
+# print(hong_kong == hong_kong_2)
+# locations = {hong_kong, hong_kong_2, cape_town}
+# print(locations)
+print(hong_kong)
