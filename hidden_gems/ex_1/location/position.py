@@ -1,4 +1,5 @@
 import inspect
+from pprint import pprint
 
 
 def auto_repr(cls):
@@ -30,6 +31,12 @@ def auto_repr(cls):
 @auto_repr
 class Position:
     def __init__(self, latitude, longitude):
+        if not (-90 <= latitude <= 90):
+            raise ValueError(f'Latitude {latitude} out of range')
+
+        if not (-180 <= longitude <= 180):
+            raise ValueError(f'Longitude {longitude} out of range')
+
         self._latitude = latitude
         self._longitude = longitude
 
@@ -69,6 +76,15 @@ class Position:
 
         return f'{latitude}°{self.latitude_hemisphere}, {longitude}°{self.longitude_hemisphere}'
 
+    def __eq__(self, other):
+        if not isinstance(other, Position):
+            return NotImplemented
+
+        return self.latitude == other.latitude and self.longitude == other.longitude
+
+    def __hash__(self):
+        return hash((self.latitude, self.longitude))
+
 
 p = Position(latitude=39.78, longitude=-122.42)
 print(p)
@@ -77,6 +93,9 @@ print(p)
 # print(dir(object))
 
 class EarthPosition(Position):
+    pass
+
+class MarsPosition(Position):
     pass
 
 
@@ -105,7 +124,10 @@ hong_kong = Location('Hong Kong', EarthPosition(22.29, 114.16))
 cape_town = Location('Cape Town', EarthPosition(-33.93, 18.42))
 
 ep = EarthPosition(22.29, 114.16)
+mp = MarsPosition(22.29, 114.16)
 
-print(f'{hong_kong!r}')
-print(f'{cape_town!r}')
-print(f'{ep!r}')
+pprint(ep == mp)
+
+# print(f'{hong_kong!r}')
+# print(f'{cape_town!r}')
+# print(f'{ep!r}')
