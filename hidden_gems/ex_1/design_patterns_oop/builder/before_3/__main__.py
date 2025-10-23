@@ -1,4 +1,4 @@
-from hidden_gems.ex_1.design_patterns_oop.builder.before_2.my_computer import MyComputer
+from hidden_gems.ex_1.design_patterns_oop.builder.before_3.my_computer import MyComputer
 
 builder = MyComputer()
 builder.build_computer()
