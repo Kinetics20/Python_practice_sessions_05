@@ -21,6 +21,7 @@ dependencies = [
     "openai>=1.88.0",
     "pandas>=2.2.3",
     "pandas-stubs~=2.2.3",
+    "pendulum>=3.1.0",
     "pillow==11.2.1",
     "pygame>=2.6.1",
     "pygments>=2.19.1",
