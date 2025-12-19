@@ -1,4 +1,4 @@
-from hidden_gems.ex_1.design_patterns_oop.decorator.before.cars.abs_car import AbsCar
+from hidden_gems.ex_1.design_patterns_oop.decorator.after.cars.abs_car import AbsCar
 
 
 class Luxury(AbsCar):
