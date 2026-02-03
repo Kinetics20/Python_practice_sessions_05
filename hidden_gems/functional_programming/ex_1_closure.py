@@ -82,3 +82,27 @@ def min_length_validator(min_len: int) -> Callable[[str], bool]:
 is_strong_pass = min_length_validator(14)
 # is_strong_pass('1234567890qwerty')
 print(is_strong_pass('1234567890'))
+
+def memoize(fn: Callable[[int], int]) -> Callable[[int], int]:
+    cache: dict[int, int] = {}
+
+    def inner(x: int) -> int:
+        if x not in cache:
+            cache[x] = fn(x)
+
+        return cache[x]
+    return inner
+
+@memoize
+def square(x: int) -> int:
+    print('computing ...')
+    return x * x
+
+print(square(10))
+print(square(10))
+
+# memoized_square = memoize(square)
+# print(memoized_square(10))
+# print(memoized_square(10))
+# print(memoized_square.__closure__[0].cell_contents)
+# print(memoized_square.__code__.co_freevars)
