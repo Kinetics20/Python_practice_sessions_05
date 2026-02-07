@@ -1,4 +1,4 @@
-def repeat(times=1):
+def repeat(_fn=None, *, times=1):
     def decorator_fn(fn):
         def wrapper(*args):
             res = None
@@ -8,7 +8,10 @@ def repeat(times=1):
 
         return wrapper
 
-    return decorator_fn
+    if _fn is None:
+        return decorator_fn
+
+    return decorator_fn(_fn)
 
 
 @repeat(times=3)
@@ -16,7 +19,7 @@ def greet(name):
     print(f'Hello, {name}')
 
 
-@repeat(2)
+@repeat
 def greet_2(name):
     print(f'Hello, {name}')
 
