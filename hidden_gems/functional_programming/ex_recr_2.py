@@ -1,7 +1,21 @@
 from collections import defaultdict
 import pandas as pd
+from typing import TypedDict, Any, TypeGuard
+from collections.abc import Iterable
 
-data = [
+
+class ScoreRecords(TypedDict):
+    """
+    Represents a single game score record.
+    """
+    date: str
+    game: str
+    player: str
+    level: int
+    score: int
+
+
+data: list[ScoreRecords] = [
     {"date": "2026-02-20", "game": "SpaceWar", "player": "Alice", "level": 3, "score": 120},
     {"date": "2026-02-20", "game": "SpaceWar", "player": "Bob", "level": 2, "score": 150},
     {"date": "2026-02-20", "game": "ZombieRun", "player": "Alice", "level": 1, "score": 80},
@@ -61,4 +75,22 @@ def max_score_4(coll):
     df = pd.DataFrame(coll)
     return df.groupby(['date', 'game'])['score'].max()
 
-print(max_score_4(data))
+
+# print(max_score_4(data))
+
+
+Key = tuple[str, str]
+Score = int
+
+
+def highest_score_per_game(coll: Iterable[ScoreRecords]) -> dict[Key, Score]:
+    result: dict[Key, Score] = defaultdict(int)
+
+    for row in coll:
+        key: Key = (row['date'], row['game'])
+        result[key] = max(result[key], row['score'])
+
+    return result
+
+
+print(highest_score_per_game(data))
