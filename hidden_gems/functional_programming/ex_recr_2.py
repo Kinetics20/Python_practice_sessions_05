@@ -15,6 +15,24 @@ class ScoreRecords(TypedDict):
     score: int
 
 
+def is_score_record(obj: Any) -> TypeGuard[ScoreRecords]:
+    if not isinstance(obj, dict):
+        return False
+
+    schema: dict[str, type] = {
+        'date': str,
+        'game': str,
+        'player': str,
+        'level': int,
+        'score': int,
+    }
+
+    return all(
+        key in obj and isinstance(obj[key], expected_type)
+        for key, expected_type in schema.items()
+    )
+
+
 data: list[ScoreRecords] = [
     {"date": "2026-02-20", "game": "SpaceWar", "player": "Alice", "level": 3, "score": 120},
     {"date": "2026-02-20", "game": "SpaceWar", "player": "Bob", "level": 2, "score": 150},
@@ -84,11 +102,19 @@ Score = int
 
 
 def highest_score_per_game(coll: Iterable[ScoreRecords]) -> dict[Key, Score]:
-    result: dict[Key, Score] = defaultdict(int)
+    result: dict[Key, Score] = {}
 
     for row in coll:
+        if not is_score_record(row):
+            raise ValueError("Invalid payload")
+
         key: Key = (row['date'], row['game'])
-        result[key] = max(result[key], row['score'])
+        score: Score = row['score']
+
+        current_max = result.get(key)
+
+        if current_max is None or score > current_max:
+            result[key] = score
 
     return result
 
