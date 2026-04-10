@@ -29,9 +29,12 @@ class ShippingContainer:
             serial=type(self)._generate_serial()
         )
 
+    def _calc_volume(self):
+        return type(self).HEIGHT_FT * type(self).WIDTH_FT * self.length_ft
+
     @property
     def volume_ft3(self):
-        return type(self).HEIGHT_FT * type(self).WIDTH_FT * self.length_ft
+        return self._calc_volume()
 
     @classmethod
     def create_empty(cls, owner_code, length_ft, **kwargs):
@@ -59,9 +62,12 @@ class RefrigeratedShippingContainer(ShippingContainer):
             category='R'
         )
 
-    @property
-    def volume_ft3(self):
-        return super().volume_ft3 - type(self).FRIDGE_VOLUME_FT3
+    def _calc_volume(self):
+        return super()._calc_volume() - type(self).FRIDGE_VOLUME_FT3
+
+    # @property
+    # def volume_ft3(self):
+    #     return super().volume_ft3 - type(self).FRIDGE_VOLUME_FT3
 
     @property
     def celsius(self):
@@ -93,6 +99,19 @@ class RefrigeratedShippingContainer(ShippingContainer):
         return f'Owner_code: {self.owner_code}, Bic: {self.bic}, Contents: {self.contents}, Temperature C: {self.celsius}, Temperature F: {self.temp_f}, Temperature K: {self.temp_k}'
 
 
+class HeatedRefrigeratedShippingContainer(RefrigeratedShippingContainer):
+
+    MIN_CELSIUS = -20
+
+    @RefrigeratedShippingContainer.celsius.setter
+    def celsius(self, value):
+        if value < type(self).MIN_CELSIUS:
+            raise ValueError(f'Temperature too cold')
+        RefrigeratedShippingContainer.celsius.fset(self, value)
+
+
+
+
 # s1 = ShippingContainer('MAE', ['apple', 'banana'])
 # s2 = ShippingContainer('MAE', ['tools'])
 #
@@ -104,7 +123,7 @@ class RefrigeratedShippingContainer(ShippingContainer):
 # print(ShippingContainer.next_serial)
 # print(s3.bic)
 
-r1 = RefrigeratedShippingContainer.create_with_items('MAE', 20, ['fishes'], celsius=2)
+r1 = HeatedRefrigeratedShippingContainer.create_with_items('MAE', 20, ['fishes'], celsius=-3)
 print(r1.bic)
 print(r1.celsius)
 # print(r1._make_bic_code('MAE', 1337))
