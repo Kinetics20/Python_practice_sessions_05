@@ -164,7 +164,6 @@ class Person:
         self.name: str = name
         self.email: str = email
 
-
     @property
     def name(self):
         return self._name
@@ -190,19 +189,99 @@ class Person:
         return f'{self.name} ({self.email})'
 
 
-
-class Organizer:
-    def __init__(self):
-        self.name = ''
-
-
-class Attendee:
-    def __init__(self, name, email):
-        self.name = name
-        self.email = email
-        self.confirmed = False
-
-    def confirm(self):
-        pass
+class Organizer(Person):
+    def __init__(self, name: str, email: str, department: str) -> None:
+        super().__init__(name, email)
+        self.department: str = department
 
 
+class Attendee(Person):
+    def __init__(self, name: str, email: str) -> None:
+        super().__init__(name, email)
+        self.confirmed: bool = False
+
+    def confirm(self) -> None:
+        self.confirmed = True
+
+
+class Calendar:
+    def __init__(self, owner: str) -> None:
+        self._owner: str = owner
+        self._events: list[Event] = []
+
+    def add_event(self, event: Event) -> None:
+        self._events.append(event)
+        self._events.sort(key=lambda x: x.start)
+
+    def list_events(self) -> None:
+        print(f'\nCalendar of {self._owner}')
+        print('-' * 40)
+
+        for event in self._events:
+            print(event)
+
+    def show_details(self) -> None:
+        print('\nDetails')
+        print('-' * 40)
+
+        for event in self._events:
+            print(event.describe())
+            print()
+
+    def find_conflicts(self) -> None:
+        print('\nConflicts')
+        print('-' * 40)
+
+        for i in range(len(self._events)):
+            for j in range(i + 1, len(self._events)):
+                if self._events[i].overlap_with(self._events[j]):
+                    print(f'{self._events[i].title} overlaps with {self._events[j].title}')
+
+
+def main() -> None:
+    calendar = Calendar('Mike')
+
+    organizer = Organizer('Mike', 'sth@gmail.com', 'Python')
+
+    meeting = Meeting(
+        title='Agentic AI discussion',
+        start=datetime(2026, 4, 22, 21, 30),
+        duration_minutes=60,
+        organizer=organizer,
+        location='Lima'
+
+    )
+
+    meeting.add_attendee('Andrew', 'andrew@gmail.com')
+    meeting.add_attendee('Greg', 'greg@gmail.com')
+    meeting.add_attendee('Kate', 'kate@gmail.com')
+
+    meeting.confirm_attendee('greg@gmail.com')
+    meeting.confirm_attendee('kate@gmail.com')
+
+    workshop = Workshop(
+        title='Python OOP',
+        start=datetime(2026, 4, 22, 21, 0),
+        duration_minutes=240,
+        instructor='Pablo',
+        capacity=15,
+    )
+
+    workshop.register('Pete')
+    workshop.register('Amos')
+    workshop.register('Mateo')
+    workshop.register('Richard')
+    workshop.register('Agatha')
+    workshop.register('Andrew')
+    workshop.register('Ramon')
+
+    calendar.add_event(workshop)
+    calendar.add_event(meeting)
+
+    calendar.list_events()
+    calendar.show_details()
+    calendar.find_conflicts()
+
+
+if __name__ == '__main__':
+    main()
