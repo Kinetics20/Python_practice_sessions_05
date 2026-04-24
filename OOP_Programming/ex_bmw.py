@@ -87,3 +87,77 @@ class Vehicle(ABC):
 
     def vehicle_info(self) -> str:
         return f'Brand: {self.brand}, model: {self.model}, year: {self.year}, mileage: {self.mileage}'
+
+
+class Car(Vehicle):
+    def __init__(self, brand: str, model: str, year: int, mileage: int, doors: int, engine: Engine) -> None:
+        super().__init__(brand, model, year, mileage)
+        self.doors: int = doors
+        self._engine: Engine = engine
+
+    @property
+    def doors(self) -> int:
+        return self._doors
+
+    @doors.setter
+    def doors(self, value: int) -> None:
+        if value < 3:
+            raise ValueError('Amount of doors should be at least 3.')
+        self._doors = value
+
+    @property
+    def engine(self) -> Engine:
+        return self._engine
+
+    def drive(self, km: int) -> None:
+        if km <= 0:
+            raise ValueError('Distance must be greater than zero.')
+        self.mileage += km
+
+    @abstractmethod
+    def open_trunk(self) -> str:
+        ...
+
+
+class BMW(Car):
+    def __init__(
+            self,
+            model: str,
+            year: int,
+            mileage: int,
+            doors: int,
+            engine: Engine,
+            series: str,
+            has_xdrive: bool
+
+    ) -> None:
+        super().__init__(brand='BMW', model=model, year=year, mileage=mileage, doors=doors, engine=engine)
+
+        self.series = series
+        self._has_xdrive: bool = has_xdrive
+
+    @property
+    def series(self) -> str:
+        return self._series
+
+    @series.setter
+    def series(self, value: str) -> None:
+        if value.strip() not in ('1', '2', '3', '4', '5', '6', '7', 'X1', 'X2', 'X3', 'X5', 'X6'):
+            raise ValueError('Entered series does not exist.')
+        self._series = value.strip()
+
+    @property
+    def has_xdrive(self) -> bool:
+        return self._has_xdrive
+
+    @override
+    def start_engine(self) -> str:
+        return self.engine.start()
+
+    @override
+    def open_trunk(self) -> str:
+        return f'The trunk of the {self.brand} {self.model} now is open.'
+
+    def activate_sport_mode(self) -> str:
+        return 'The sport mode is active.'
+
