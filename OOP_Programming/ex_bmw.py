@@ -161,3 +161,36 @@ class BMW(Car):
     def activate_sport_mode(self) -> str:
         return 'The sport mode is active.'
 
+
+class BMWM(BMW):
+    def __init__(
+            self,
+            model: str,
+            year: int,
+            mileage: int,
+            doors: int,
+            engine: Engine,
+            series: str,
+            has_xdrive: bool,
+            horsepower: int
+    ) -> None:
+        super().__init__(model, year, mileage, doors, engine, series, has_xdrive)
+        self.horsepower = horsepower
+
+
+    @property
+    def horsepower(self)-> int:
+        return self._horsepower
+
+    @horsepower.setter
+    def horsepower(self, value: int) -> None:
+        if value < 350:
+            raise  ValueError('The minimum horsepower for M should be at least 350 Hp.')
+        self._horsepower = value
+
+    def start_engine(self) -> str:
+        base_message = super().start_engine()
+        return f'{base_message}'
+
+    def launch_control(self) -> str:
+        return 'The control is on'
