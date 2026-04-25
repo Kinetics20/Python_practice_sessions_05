@@ -6,7 +6,7 @@ from typing import override
 
 class Engine:
     def __init__(self, power: int, fuel_type: str) -> None:
-        self.power: int = power
+        self.power = power
         self._fuel_type: str = fuel_type
 
     @property
@@ -39,7 +39,7 @@ class ElectricEngine(Engine):
     @battery_level.setter
     def battery_level(self, value: int) -> None:
         if value < 0 or value > 100:
-            raise ValueError('Battery should not be less than zero and grater than 100.')
+            raise ValueError('Battery should not be less than zero and greater than 100.')
         self._battery_level = value
 
     @override
@@ -177,20 +177,20 @@ class BMWM(BMW):
         super().__init__(model, year, mileage, doors, engine, series, has_xdrive)
         self.horsepower = horsepower
 
-
     @property
-    def horsepower(self)-> int:
+    def horsepower(self) -> int:
         return self._horsepower
 
     @horsepower.setter
     def horsepower(self, value: int) -> None:
         if value < 350:
-            raise  ValueError('The minimum horsepower for M should be at least 350 Hp.')
+            raise ValueError('The horsepower must be at least 350 HP.')
         self._horsepower = value
 
+    @override
     def start_engine(self) -> str:
         base_message = super().start_engine()
-        return f'{base_message}'
+        return f'The BMW {base_message}'
 
     def launch_control(self) -> str:
-        return 'The control is on'
+        return 'The launch control is activated'
