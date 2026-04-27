@@ -194,3 +194,50 @@ class BMWM(BMW):
 
     def launch_control(self) -> str:
         return 'The launch control is activated'
+
+
+class ElectricBMW(Car):
+    def __init__(
+            self,
+            model: str,
+            year: int,
+            mileage: int,
+            doors: int,
+            engine: ElectricEngine,
+            battery_capacity: float,
+            range_km: int
+    ) -> None:
+        super().__init__(brand='BMW', model=model, year=year, mileage=mileage, doors=doors, engine=engine)
+        self.battery_capacity = battery_capacity
+        self.range_km = range_km
+
+    @property
+    def battery_capacity(self) -> float:
+        return self._battery_capacity
+
+    @battery_capacity.setter
+    def battery_capacity(self, value: float) -> None:
+        if value <= 10.0:
+            raise ValueError('Battery capacity should be greater than 10 kWh.')
+        self._battery_capacity = value
+
+    @property
+    def range_km(self) -> int:
+        return self._range_km
+
+    @range_km.setter
+    def range_km(self, value: int) -> None:
+        if value <= 0:
+            raise ValueError('Range must be greater than zero.')
+        self._range_km = value
+
+    def charge(self) -> str:
+        return 'The battery is charging.'
+
+    @override
+    def start_engine(self) -> str:
+        return self.engine.start()
+
+    @override
+    def open_trunk(self) -> str:
+        return f'The trunk of the {self.brand} {self.model} is now open.'
