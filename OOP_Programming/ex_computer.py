@@ -241,3 +241,148 @@ class GamingLaptop(Laptop):
         return f'{self.brand}, {self.model} is now in turbo mode.'
 
 
+class MobileDevice(Device):
+    def __init__(
+            self,
+            brand: str,
+            model: str,
+            year: int,
+            serial_number: str,
+            battery: Battery,
+            screen_size: float,
+            has_cellular: bool
+    ) -> None:
+        super().__init__(brand, model, year, serial_number)
+        self._battery: Battery = battery
+        self.screen_size: float = screen_size
+        self._has_cellular: bool = has_cellular
+
+    @property
+    def battery(self) -> Battery:
+        return self._battery
+
+    @property
+    def screen_size(self) -> float:
+        return self._screen_size
+
+    @screen_size.setter
+    def screen_size(self, value: float) -> None:
+        if not (5.0 <= value <= 14.0):
+            raise ValueError('Screen size should be in range 5 - 14 inches.')
+        self._screen_size = value
+
+    @property
+    def has_cellular(self) -> bool:
+        return self._has_cellular
+
+    def install_app(self, app_name: str) -> str:
+        if not app_name.strip():
+            raise ValueError("App name cannot be empty.")
+        return f'{app_name.strip()} is now installing.'
+
+    @abstractmethod
+    def take_photo(self) -> str:
+        ...
+
+
+class Smartphone(MobileDevice):
+    def __init__(
+            self,
+            brand: str,
+            model: str,
+            year: int,
+            serial_number: str,
+            battery: Battery,
+            screen_size: float,
+            has_cellular: bool,
+            phone_number: str,
+            camera_mp: int
+    ) -> None:
+        super().__init__(
+            brand,
+            model,
+            year,
+            serial_number,
+            battery,
+            screen_size,
+            has_cellular
+        )
+        self.phone_number: str = phone_number
+        self.camera_mp: int = camera_mp
+
+    @property
+    def phone_number(self) -> str:
+        return self._phone_number
+
+    @phone_number.setter
+    def phone_number(self, value: str) -> None:
+        cleaned_value = value.strip()
+        if len(cleaned_value) < 9 or not cleaned_value.isdigit():
+            raise ValueError('Phone number should have 9 digits at least.')
+        self._phone_number = cleaned_value
+
+    @property
+    def camera_mp(self) -> int:
+        return self._camera_mp
+
+    @camera_mp.setter
+    def camera_mp(self, value: int) -> None:
+        if value < 8:
+            raise ValueError("Camera's resolution should be at least 8 Mp.")
+        self._camera_mp = value
+
+    @override
+    def power_on(self) -> str:
+        return 'Smartphone is turned on.'
+
+    @override
+    def take_photo(self) -> str:
+        return 'The picture has been taken.'
+
+    def make_call(self, number: str) -> str:
+        cleaned_number = number.strip()
+        if len(cleaned_number) < 9 or not cleaned_number.isdigit():
+            raise ValueError('The number must have 9 digits at least.')
+        return f'Calling {cleaned_number}.'
+
+
+class Tablet(MobileDevice):
+    def __init__(
+            self,
+            brand: str,
+            model: str,
+            year: int,
+            serial_number: str,
+            battery: Battery,
+            screen_size: float,
+            has_cellular: bool,
+            supports_stylus: bool
+
+    ) -> None:
+        super().__init__(
+            brand,
+            model,
+            year,
+            serial_number,
+            battery,
+            screen_size,
+            has_cellular
+        )
+        self._supports_stylus: bool = supports_stylus
+
+    @property
+    def supports_stylus(self) -> bool:
+        return self._supports_stylus
+
+    @override
+    def power_on(self) -> str:
+        return 'Tablet is turned on.'
+
+    @override
+    def take_photo(self) -> str:
+        return 'The tablet has taken a photo.'
+
+    def draw_with_stylus(self) -> str:
+        if not self.supports_stylus:
+            raise ValueError('Tablet does not support stylus drawing.')
+        return 'Tablet is ready to draw.'
