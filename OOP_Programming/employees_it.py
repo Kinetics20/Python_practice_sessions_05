@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from typing import override
 
 
 class Department:
@@ -150,3 +151,49 @@ class ITEmployee(Employee):
     @abstractmethod
     def write_code(self) -> str:
         ...
+
+
+class BackendDeveloper(ITEmployee):
+    def __init__(
+            self,
+            first_name: str,
+            last_name: str,
+            employee_id: str,
+            salary: float,
+            department: Department,
+            project: Project,
+            programming_language: str,
+            framework: str
+    ) -> None:
+        super().__init__(
+            first_name,
+            last_name,
+            employee_id,
+            salary,
+            department,
+            project,
+            programming_language
+        )
+        self.framework: str = framework
+
+    @property
+    def framework(self) -> str:
+        return self._framework
+
+    @framework.setter
+    def framework(self, value: str) -> None:
+        cleared = value.strip()
+        if len(cleared) < 2:
+            raise ValueError("Framework name should contain at least 2 characters.")
+        self._framework = cleared
+
+    @override
+    def work(self) -> str:
+        return f'{self.get_full_name()} is working on the {self.project.name}.'
+
+    @override
+    def write_code(self) -> str:
+        return f'{self.get_full_name()} is coding in {self.programming_language} using {self.framework}.'
+
+    def design_api(self) -> str:
+        return f'The {self.get_full_name()} is designing API for {self.project.name}.'
