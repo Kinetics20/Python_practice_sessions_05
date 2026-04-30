@@ -197,3 +197,94 @@ class BackendDeveloper(ITEmployee):
 
     def design_api(self) -> str:
         return f'The {self.get_full_name()} is designing API for {self.project.name}.'
+
+
+class PythonBackendDeveloper(BackendDeveloper):
+    def __init__(
+            self,
+            first_name: str,
+            last_name: str,
+            employee_id: str,
+            salary: float,
+            department: Department,
+            project: Project,
+            framework: str,
+            uses_fastapi: bool
+
+    ) -> None:
+        super().__init__(
+            first_name,
+            last_name,
+            employee_id,
+            salary,
+            department,
+            project,
+            programming_language='Python',
+            framework=framework,
+        )
+        self._uses_fastapi: bool = uses_fastapi
+
+    @property
+    def uses_fastapi(self) -> bool:
+        return self._uses_fastapi
+
+    @override
+    def work(self) -> str:
+        msg = super().work()
+        return f'{msg} He specializes in Python backend development.'
+
+    @override
+    def write_code(self) -> str:
+        return super().write_code()
+
+    def create_fastapi_endpoint(self) -> str:
+        if not self.uses_fastapi:
+            raise ValueError('Python backend developer does not use FastAPI.')
+        return f'{self.get_full_name()} is creating FastAPI endpoint using {self.framework}.'
+
+
+class FrontendDeveloper(ITEmployee):
+    def __init__(
+            self,
+            first_name: str,
+            last_name: str,
+            employee_id: str,
+            salary: float,
+            department: Department,
+            project: Project,
+            programming_language: str,
+            frontend_framework: str
+    ) -> None:
+        super().__init__(
+            first_name,
+            last_name,
+            employee_id,
+            salary,
+            department,
+            project,
+            programming_language,
+        )
+        self.frontend_framework: str = frontend_framework
+
+    @property
+    def frontend_framework(self) -> str:
+        return self._frontend_framework
+
+    @frontend_framework.setter
+    def frontend_framework(self, value: str):
+        cleared = value.strip()
+        if len(cleared) < 2:
+            raise ValueError('Name should have 2 characters at least.')
+        self._frontend_framework = cleared
+
+    @override
+    def work(self) -> str:
+        msg = super().work()
+        return f'{msg} He is creating UI for {self.project.name}.'
+
+    @override
+    def write_code(self) -> str:
+        return super().write_code()
+
+    def build_ui_component(self) -> str:
+        return f'{self.get_full_name()} is creating UI component for {self.project.name}'
