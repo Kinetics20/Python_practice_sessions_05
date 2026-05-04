@@ -1,6 +1,8 @@
 from abc import ABC, abstractmethod
 from typing import override
 
+from tqdm.contrib import slack
+
 
 class Department:
     def __init__(self, name: str, location: str) -> None:
@@ -271,20 +273,109 @@ class FrontendDeveloper(ITEmployee):
         return self._frontend_framework
 
     @frontend_framework.setter
-    def frontend_framework(self, value: str):
+    def frontend_framework(self, value: str) -> None:
         cleared = value.strip()
         if len(cleared) < 2:
-            raise ValueError('Name should have 2 characters at least.')
+            raise ValueError('Frontend framework name should have at least 2 characters.')
         self._frontend_framework = cleared
 
     @override
     def work(self) -> str:
-        msg = super().work()
-        return f'{msg} He is creating UI for {self.project.name}.'
+        return f'{self.get_full_name()} is creating UI for {self.project.name}.'
 
     @override
     def write_code(self) -> str:
-        return super().write_code()
+        return f'{self.get_full_name()} is coding in {self.programming_language} using {self.frontend_framework}'
 
     def build_ui_component(self) -> str:
-        return f'{self.get_full_name()} is creating UI component for {self.project.name}'
+        return f'{self.get_full_name()} is creating UI component for {self.project.name}.'
+
+
+class QAEngineer(Employee):
+    def __init__(
+            self,
+            first_name: str,
+            last_name: str,
+            employee_id: str,
+            salary: float,
+            department: Department,
+            project: Project,
+            automation_tool: str,
+    ) -> None:
+        super().__init__(first_name, last_name, employee_id, salary)
+        self._department: Department = department
+        self._project: Project = project
+        self.automation_tool: str = automation_tool
+
+    @property
+    def department(self) -> Department:
+        return self._department
+
+    @property
+    def project(self) -> Project:
+        return self._project
+
+    @property
+    def automation_tool(self) -> str:
+        return self._automation_tool
+
+    @automation_tool.setter
+    def automation_tool(self, value: str) -> None:
+        cleared = value.strip()
+        if len(cleared) < 4:
+            raise ValueError("Tool's name should contain 4 characters at least.")
+        self._automation_tool = cleared
+
+    @override
+    def work(self) -> str:
+        return f'{self.get_full_name()} is working on the {self.project.name}.'
+
+    def write_tests(self) -> str:
+        return f'{self.get_full_name()} is writing test suites for {self.project.name}.'
+
+    def report_bug(self, bug_title: str) -> str:
+        cleared = bug_title.strip()
+        if len(cleared) < 3:
+            raise ValueError('Bug name should contain at least 3 characters.')
+        return f'{self.get_full_name()} is reporting a {cleared} for the {self.project.name}.'
+
+
+class Manager(Employee):
+    def __init__(
+            self,
+            first_name: str,
+            last_name: str,
+            employee_id: str,
+            salary: float,
+            department: Department,
+            team_size: int
+    ) -> None:
+        super().__init__(first_name, last_name, employee_id, salary)
+        self._department: Department = department
+        self.team_size: int = team_size
+
+    @property
+    def department(self) -> Department:
+        return self._department
+
+    @property
+    def team_size(self) -> int:
+        return self._team_size
+
+    @team_size.setter
+    def team_size(self, value: int) -> None:
+        if value < 1:
+            raise ValueError("The team should include at least one member.")
+        self._team_size = value
+
+    @override
+    def work(self) -> str:
+        return f"{self.get_full_name()} is managing the {self.department.name} department."
+
+    def conduct_meeting(self) -> str:
+        return f"{self.get_full_name()} is conducting a meeting in the {self.department.name} department."
+
+    def approve_budget(self, project: Project) -> str:
+        if not isinstance(project, Project):
+            raise TypeError('Project must be an instance of Project.')
+        return f"{self.get_full_name()} approved a budget of {project.budget} for {project.name}."
