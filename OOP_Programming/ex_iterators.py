@@ -62,3 +62,69 @@ class CountIterator:
 # print(next(counter))
 # print(next(counter))
 # print(next(counter))
+
+#Iterator cycle
+
+class CycleIterator:
+    def __init__(self, iterable):
+        self._items = list(iterable)
+        self._index = 0
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        if len(self._items) == 0:
+            raise StopIteration
+
+        item = self._items[self._index]
+        self._index += 1
+
+        if self._index == len(self._items):
+            self._index = 0
+
+        return item
+
+# c = CycleIterator('ABCD')
+# print(next(c))
+# print(next(c))
+# print(next(c))
+# print(next(c))
+# print(next(c))
+# print(next(c))
+
+
+class ChainIterator:
+    def __init__(self, *iterables):
+        self._iterables = iterables
+        self._index = 0
+        self._current_iterator = iter(self._iterables[self._index]) if self._iterables else None
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+
+        while True:
+            if self._index >  len(self._iterables):
+                raise StopIteration
+
+            try:
+                return next(self._current_iterator)
+            except StopIteration:
+                self._index += 1
+
+                if self._index >= len(self._iterables):
+                    raise StopIteration
+
+                self._current_iterator = iter(self._iterables[self._index])
+
+
+ci = ChainIterator("AB", "", [], "CD", [1, 2])
+
+# print(next(ci))
+# print(next(ci))
+# print(next(ci))
+# print(next(ci))
+# print(next(ci))
+# print(next(ci))
