@@ -32,6 +32,7 @@ def tee(iterable, n=2):
 
 a, b = tee('ABC', 2)
 
+
 # for item in a:
 #     print(item)
 #
@@ -54,7 +55,8 @@ class CountIterator:
     def __next__(self):
         result = self._current
         self._current += self._step
-        return  result
+        return result
+
 
 # counter = CountIterator(10, 2)
 # print(next(counter))
@@ -63,7 +65,7 @@ class CountIterator:
 # print(next(counter))
 # print(next(counter))
 
-#Iterator cycle
+# Iterator cycle
 
 class CycleIterator:
     def __init__(self, iterable):
@@ -84,6 +86,7 @@ class CycleIterator:
             self._index = 0
 
         return item
+
 
 # c = CycleIterator('ABCD')
 # print(next(c))
@@ -106,7 +109,7 @@ class ChainIterator:
     def __next__(self):
 
         while True:
-            if self._index >  len(self._iterables):
+            if self._index > len(self._iterables):
                 raise StopIteration
 
             try:
@@ -122,9 +125,68 @@ class ChainIterator:
 
 ci = ChainIterator("AB", "", [], "CD", [1, 2])
 
+
 # print(next(ci))
 # print(next(ci))
 # print(next(ci))
 # print(next(ci))
 # print(next(ci))
 # print(next(ci))
+
+
+class IsliceIterator:
+    def __init__(self, iterable, start, stop):
+        self._iterator = iter(iterable)
+        self._start = start
+        self._stop = stop
+        self._index = 0
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+
+        while self._index < self._start:
+            next(self._iterator)
+            self._index += 1
+
+        if self._index >= self._stop:
+            raise StopIteration
+
+        element = next(self._iterator)
+        self._index += 1
+
+        return element
+
+
+# mii = IsliceIterator('abcdefgh', 2, 5)
+# for item in mii:
+#     print(item)
+
+
+class CompressIterator:
+    def __init__(self, data, selectors):
+        self._data_iterator = iter(data)
+        self._selectors_iterator = iter(selectors)
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+
+        while True:
+            item = next(self._data_iterator)
+            selector = next(self._selectors_iterator)
+
+            if selector:
+                return item
+
+
+x = CompressIterator('abcdefgh', [1, 0, 1, 0, 1, 1, 0, 1])
+
+print(next(x))
+print(next(x))
+print(next(x))
+print(next(x))
+print(next(x))
+print(next(x))
