@@ -38,7 +38,6 @@ dependencies = [
     "types-pygments>=2.19.0.20250516",
     "types-tqdm>=4.67.0.20250516",
     "watchdog>=6.0.0",
-    "weaviate>=0.1.2",
     "weaviate-client>=4.21.0",
     "yellowbrick>=1.5",
 ]
