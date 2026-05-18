@@ -184,9 +184,65 @@ class CompressIterator:
 
 x = CompressIterator('abcdefgh', [1, 0, 1, 0, 1, 1, 0, 1])
 
-print(next(x))
-print(next(x))
-print(next(x))
-print(next(x))
-print(next(x))
-print(next(x))
+
+# print(next(x))
+# print(next(x))
+# print(next(x))
+# print(next(x))
+# print(next(x))
+# print(next(x))
+
+
+class FilterFalseIterator:
+    def __init__(self, predicate, iterable):
+        self._predicate = predicate
+        self._iterator = iter(iterable)
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+
+        while True:
+            item = next(self._iterator)
+
+            if not self._predicate(item):
+                return item
+
+
+h = FilterFalseIterator(lambda x: x % 2 == 0, [1, 2, 3, 4, 5, 6])
+
+
+# print(next(h))
+# print(next(h))
+# print(next(h))
+# print(next(h))
+
+
+class DropWhileIterator:
+    def __init__(self, predicate, iterable):
+        self._predicate = predicate
+        self._iterator = iter(iterable)
+        self._dropping = True
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+
+        while self._dropping:
+            item = next(self._iterator)
+
+            if not self._predicate(item):
+                self._dropping = False
+                return item
+
+        return next(self._iterator)
+
+
+it = DropWhileIterator(lambda x: x < 5, [1, 2, 3, 5, 2, 1, 7])
+# print(next(it))
+# print(next(it))
+# print(next(it))
+# print(next(it))
+# print(next(it))
