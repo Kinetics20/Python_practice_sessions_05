@@ -13,3 +13,5 @@ wheels/
 
 /demos/exercises_4/se_console/bigfile
 /demos/exercises_7/output/
+/vector_db/images/
+/vector_db/test_images/
