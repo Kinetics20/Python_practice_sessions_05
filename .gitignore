@@ -15,4 +15,9 @@ wheels/
 /demos/exercises_7/output/
 /vector_db/images/
 /vector_db/test_images/
-/vector_db/vector_db/assets/gemini_embedding_2_images/
+# Ignore everything generated inside nested assets
+/vector_db/vector_db/assets/**
+
+# Keep assets directory placeholder
+!/vector_db/vector_db/assets/
+!/vector_db/vector_db/assets/.gitkeep
