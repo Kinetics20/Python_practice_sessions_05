@@ -177,5 +177,49 @@ event = ORDER_EVENT_ADAPTER.validate_json(payload_bytes)
 dumped = ORDER_EVENT_ADAPTER.dump_json(event)
 # print(dumped)
 
-schema = OrderCreatedEvent.model_json_schema()
-# pprint(schema)
+# schema = OrderCreatedEvent.model_json_schema()
+# # pprint(schema)
+#
+#
+#
+# with open("order_created_event.schema.json", "w", encoding="utf-8") as f:
+#     json.dump(schema, f, indent=2, ensure_ascii=False)
+
+class AppSettings(BaseSettings):
+    model_config = SettingsConfigDict(env_prefix='ORDERS_', extra='ignore', env_file='.env')
+
+    ingest_topic: Annotated[str, Field(min_length=3)]
+    max_batch_size: Annotated[int, Field(gt=0, le=10_000)] = 500
+    strict_ingest: bool = False
+
+# settings = AppSettings()
+
+@validate_call
+def reserve_stock(sku: Sku, quantity: Quantity, warehouse_id: Annotated[str, Field(pattern=r'^WH-\d{2}$')]) -> str:
+    return f'{warehouse_id}:{sku}:{quantity}'
+
+# res = reserve_stock('TECH-123', '3', 'WH-01')
+# print(res)
+
+PartnerXExtension = create_model(
+    'PartnerXExtension',
+    loyalty_level=(Literal['silver', 'gold', 'platinum'], ...),
+    gift_wrap=(bool, False),
+    callback_url=(Annotated[str, Field(pattern=r'^https://')], ...),
+    __config__=ConfigDict(extra='forbid')
+)
+
+data = {"loyalty_level": "gold", "gift_wrap": "true", "callback_url": "https://partner.example/hook"}
+
+# ext = PartnerXExtension.model_validate(data)
+# print(ext.loyalty_level)
+
+class RetryPolicy(BaseModel):
+    model_config = ConfigDict(validate_assignment=True)
+
+    max_attempts: Annotated[int, Field(ge=1, le=10)] = 3
+    backoff_seconds: Annotated[float, Field(gt=0, le=60)] = 1.0
+
+policy = RetryPolicy()
+policy.max_attempts = 15
+print(policy.max_attempts)

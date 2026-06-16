@@ -1,0 +1,220 @@
+{
+  "$defs": {
+    "CanonicalOrder": {
+      "additionalProperties": false,
+      "properties": {
+        "order_id": {
+          "maxLength": 40,
+          "minLength": 6,
+          "title": "Order Id",
+          "type": "string"
+        },
+        "partner": {
+          "pattern": "^[A-Z0-9_]{3,20}$",
+          "title": "Partner",
+          "type": "string"
+        },
+        "customer": {
+          "$ref": "#/$defs/Customer"
+        },
+        "shipping": {
+          "$ref": "#/$defs/ShippingAddress"
+        },
+        "totals": {
+          "$ref": "#/$defs/OrderTotals"
+        },
+        "received_at": {
+          "format": "date-time",
+          "title": "Received At",
+          "type": "string"
+        }
+      },
+      "required": [
+        "order_id",
+        "partner",
+        "customer",
+        "shipping",
+        "totals"
+      ],
+      "title": "CanonicalOrder",
+      "type": "object"
+    },
+    "Customer": {
+      "properties": {
+        "customer_id": {
+          "pattern": "^CUST-\\d{4,}$",
+          "title": "Customer Id",
+          "type": "string"
+        },
+        "loyalty_tier": {
+          "default": "standard",
+          "enum": [
+            "standard",
+            "gold",
+            "vip"
+          ],
+          "title": "Loyalty Tier",
+          "type": "string"
+        }
+      },
+      "required": [
+        "customer_id"
+      ],
+      "title": "Customer",
+      "type": "object"
+    },
+    "Money": {
+      "properties": {
+        "amount": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0.0,
+              "type": "number"
+            },
+            {
+              "pattern": "^(?!^[-+.]*$)[+-]?0*(?:\\d{0,10}|(?=[\\d.]{1,13}0*$)\\d{0,10}\\.\\d{0,2}0*$)",
+              "type": "string"
+            }
+          ],
+          "title": "Amount"
+        },
+        "currency": {
+          "enum": [
+            "PLN",
+            "USD",
+            "EUR"
+          ],
+          "title": "Currency",
+          "type": "string"
+        }
+      },
+      "required": [
+        "amount",
+        "currency"
+      ],
+      "title": "Money",
+      "type": "object"
+    },
+    "OrderItem": {
+      "properties": {
+        "sku": {
+          "maxLength": 40,
+          "minLength": 3,
+          "pattern": "^[A-Z0-9][A-Z0-9_-]+$",
+          "title": "Sku",
+          "type": "string"
+        },
+        "quantity": {
+          "exclusiveMinimum": 0,
+          "maximum": 999,
+          "title": "Quantity",
+          "type": "integer"
+        },
+        "unit_price": {
+          "$ref": "#/$defs/Money"
+        }
+      },
+      "required": [
+        "sku",
+        "quantity",
+        "unit_price"
+      ],
+      "title": "OrderItem",
+      "type": "object"
+    },
+    "OrderTotals": {
+      "properties": {
+        "items": {
+          "items": {
+            "$ref": "#/$defs/OrderItem"
+          },
+          "minItems": 1,
+          "title": "Items",
+          "type": "array"
+        },
+        "declared_total": {
+          "$ref": "#/$defs/Money"
+        }
+      },
+      "required": [
+        "items",
+        "declared_total"
+      ],
+      "title": "OrderTotals",
+      "type": "object"
+    },
+    "ShippingAddress": {
+      "properties": {
+        "country": {
+          "enum": [
+            "PL",
+            "DE",
+            "CZ"
+          ],
+          "title": "Country",
+          "type": "string"
+        },
+        "city": {
+          "maxLength": 80,
+          "minLength": 2,
+          "title": "City",
+          "type": "string"
+        },
+        "postal_code": {
+          "pattern": "^\\d{2}-\\d{3}$",
+          "title": "Postal Code",
+          "type": "string"
+        },
+        "line1": {
+          "maxLength": 120,
+          "minLength": 5,
+          "title": "Line1",
+          "type": "string"
+        }
+      },
+      "required": [
+        "country",
+        "city",
+        "postal_code",
+        "line1"
+      ],
+      "title": "ShippingAddress",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "event_id": {
+      "format": "uuid",
+      "title": "Event Id",
+      "type": "string"
+    },
+    "partner_code": {
+      "pattern": "^[A-Z0-9_]{3,20}$",
+      "title": "Partner Code",
+      "type": "string"
+    },
+    "event_time": {
+      "format": "date-time",
+      "title": "Event Time",
+      "type": "string"
+    },
+    "type": {
+      "const": "order.created",
+      "title": "Type",
+      "type": "string"
+    },
+    "order": {
+      "$ref": "#/$defs/CanonicalOrder"
+    }
+  },
+  "required": [
+    "event_id",
+    "partner_code",
+    "event_time",
+    "type",
+    "order"
+  ],
+  "title": "OrderCreatedEvent",
+  "type": "object"
+}

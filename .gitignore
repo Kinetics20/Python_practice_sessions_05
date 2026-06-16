@@ -21,3 +21,4 @@ wheels/
 # Keep assets directory placeholder
 !/vector_db/vector_db/assets/
 !/vector_db/vector_db/assets/.gitkeep
+/OOP_Programming/.env
