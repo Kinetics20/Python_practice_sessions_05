@@ -48,6 +48,7 @@ dependencies = [
     "watchdog>=6.0.0",
     "weaviate-client>=4.21.0",
     "yellowbrick>=1.5",
+    "pandera[pandas]>=0.31.1",
 ]
 
 [dependency-groups]
