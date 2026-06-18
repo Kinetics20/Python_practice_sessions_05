@@ -1,7 +1,7 @@
 import pandas as pd
 import pandera.pandas as pa
 from pandera.typing import Series
-
+from torch.fx.experimental.graph_gradual_typechecker import element_wise_eq
 
 raw_order_lines = pd.DataFrame(
     [
@@ -101,7 +101,7 @@ extra_columns = raw_order_lines.assign(debug_payload='temporary partner code')
 #     print(exc.failure_cases)
 
 filter_schema = pa.DataFrameSchema(
-    columns = order_line_schema.columns,
+    columns=order_line_schema.columns,
     coerce=True,
     strict='filter',
     name='OrderLineBatchFilterMode'
@@ -125,3 +125,43 @@ ordered_schema = pa.DataFrameSchema(
     ordered=True,
     name="OrderLineBatchOrdered",
 )
+
+try:
+    order_line_schema.validate(wrong_order)
+except pa.errors.SchemaErrors as exc:
+    print(type(exc).__name__)
+    print(exc.failure_cases)
+
+math_schema = pa.DataFrameSchema(
+    columns=order_line_schema.columns,
+    checks=pa.Check(
+        lambda df: (df['quantity'] * df['unit_price']).round(2).eq(df['line_total'].round(2)),
+        name='line_total_math',
+        error='line_total must be equal quantity * unit_price'
+    ),
+    coerce=True,
+    strict=True,
+    name='OrderLineBatchWithMath'
+)
+
+# invalid_total = raw_order_lines.copy()
+# invalid_total.loc[0, 'line_total'] = '40.00'
+#
+# print(invalid_total[['quantity', 'unit_price', 'line_total']])
+#
+# math_schema.validate(invalid_total)
+
+dirty_batch = raw_order_lines.copy()
+dirty_batch.loc[0, 'quantity'] = '0'
+dirty_batch.loc[1, 'unite_price'] = '-50'
+dirty_batch.loc[2, 'currency'] = 'GBP'
+dirty_batch.loc[2, 'line_total'] = '999.99'
+
+try:
+    math_schema.validate(dirty_batch, lazy=True)
+except pa.errors.SchemaErrors as exc:
+    print('Errors')
+    print(exc.failure_cases)
+except pa.errors.SchemaError as exe:
+    print('Error')
+    print(exc.failure_cases)
