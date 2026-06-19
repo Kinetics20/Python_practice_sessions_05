@@ -22,3 +22,4 @@ wheels/
 !/vector_db/vector_db/assets/
 !/vector_db/vector_db/assets/.gitkeep
 /OOP_Programming/.env
+/vector_db/video_playback_test/
