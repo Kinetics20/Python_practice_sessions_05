@@ -49,6 +49,7 @@ dependencies = [
     "weaviate-client>=4.21.0",
     "yellowbrick>=1.5",
     "pandera[pandas]>=0.31.1",
+    "google-cloud-aiplatform>=1.158.0",
 ]
 
 [dependency-groups]
