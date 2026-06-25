@@ -50,6 +50,7 @@ dependencies = [
     "yellowbrick>=1.5",
     "pandera[pandas]>=0.31.1",
     "google-cloud-aiplatform>=1.158.0",
+    "db-dtypes>=1.7.0",
 ]
 
 [dependency-groups]
