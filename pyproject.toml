@@ -52,6 +52,7 @@ dependencies = [
     "google-cloud-aiplatform>=1.158.0",
     "db-dtypes>=1.7.0",
     "google-cloud-texttospeech>=2.37.0",
+    "av>=18.0.0",
 ]
 
 [dependency-groups]
